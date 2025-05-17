@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use client';
 import { Suspense, useEffect, useRef, useState } from "react";
 import useSound from 'use-sound';
