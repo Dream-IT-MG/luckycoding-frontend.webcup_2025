@@ -14,8 +14,31 @@
   }
 }
 
+/* effet curseur en mouvement */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  --x: 50%;
+  --y: 50%;
+}
+
+.tracking-gradient::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: radial-gradient(circle 100px at var(--x) var(--y), rgba(255, 192, 203, 0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.tracking-gradient::before {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.tracking-gradient.show-gradient::before {
+  opacity: 1;
 }
