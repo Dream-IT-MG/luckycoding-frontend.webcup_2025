@@ -1,18 +1,20 @@
 "use client"
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userLoginRequest } from "../services/auth-service";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import Spinner from "@/components/ui/spinner";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "This field is required." }),
@@ -20,7 +22,8 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,16 +34,61 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const response = await userLoginRequest({ email: values.email, password: values.password })
+    setIsLoading(true)
+    
+    const response = await userLoginRequest({
+      email: values.email,
+      password: values.password
+    });
+
+    if (response.status === "success") {
+      router.push("dashboard");
+    } else {
+      toast.error(response.message ?? "Please try again later");
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="max-w-xl">
-      <div className="bg-white">
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <input className="input" type="email" name="" />
-        </form>
+    isLoading ? (
+      <Spinner />
+    ) : (
+      <div className="max-w-sm w-full">
+        <div className="grid gap-4">
+          <h1 className="text-center font-semibold text-3xl">Connexion</h1>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <input className="input shadow-dimension w-full" type="email" placeholder="Adresse e-mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <input className="input shadow-dimension w-full" type="password" placeholder="Mot de passe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <button className="w-full bg-primary text-white rounded py-2 shadow-dimension animation" type="submit">
+                Se connecter
+              </button>
+            </form>
+          </Form>
+        </div>
       </div>
-    </div>
+    )
   );
 }
