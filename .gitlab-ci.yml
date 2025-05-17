@@ -1,0 +1,56 @@
+image: ubuntu:24.04
+
+variables:
+  SSH_PRIVATE_KEY_BASE64: $SSH_PRIVATE_KEY
+  SSH_PRIVATE_KEY_DEV_BASE64: $SSH_PRIVATE_KEY_DEV
+  IP_ADDRESS: $IP_ADDRESS
+  PRODUCTION_DIR: /home/luckycoding
+  PRODUCTION_USER: luckycoding
+
+stages:
+  - deploy
+  - build
+
+deploy:stable:
+  stage: deploy
+  before_script:
+    - "command -v ssh-agent > /dev/null || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d | tr -d '\r' | ssh-add -
+    - mkdir -p $PRODUCTION_DIR/.ssh
+    - chmod 700 $PRODUCTION_DIR/.ssh
+    - ssh-keyscan -p 22974 $IP_ADDRESS >> $PRODUCTION_DIR/.ssh/known_hosts
+    - chmod 644 $PRODUCTION_DIR/.ssh/known_hosts
+  script:
+    - ssh -p 22974 -o StrictHostKeyChecking=no $PRODUCTION_USER@$IP_ADDRESS << 'END'
+    - source ~/.bashrc
+    - source /home/luckycoding/nodevenv/luckycoding-frontend/22/bin/activate
+    - cd /home/luckycoding/luckycoding-frontend
+    - git checkout main
+    - git fetch
+    - git pull
+    - npm install
+    - END
+  environment: production
+  only:
+    - main
+
+build:stable:
+  stage: build
+  before_script:
+    - "command -v ssh-agent > /dev/null || ( apt-get update -y && apt-get install openssh-client -y )"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d | tr -d '\r' | ssh-add -
+    - mkdir -p $PRODUCTION_DIR/.ssh
+    - chmod 700 $PRODUCTION_DIR/.ssh
+    - ssh-keyscan -p 22974 $IP_ADDRESS >> $PRODUCTION_DIR/.ssh/known_hosts
+    - chmod 644 $PRODUCTION_DIR/.ssh/known_hosts
+  script:
+    - ssh -p 22974 -o StrictHostKeyChecking=no $PRODUCTION_USER@$IP_ADDRESS << 'END'
+    - source /home/luckycoding/nodevenv/luckycoding-frontend/22/bin/activate
+    - cd /home/luckycoding/luckycoding-frontend
+    - npm run build
+    - END
+  environment: production
+  only:
+    - main
