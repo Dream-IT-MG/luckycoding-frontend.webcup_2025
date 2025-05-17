@@ -1,4 +1,8 @@
 @layer base {
+  .animation {
+    @apply transition ease-linear duration-100;
+  }
+
   .input {
     @apply px-4 py-3 border border-white text-sm text-gray-700 bg-white rounded-lg shadow-sm hover:shadow-md focus:shadow-lg animation focus:outline-none focus:border-white focus:ring-1 focus:ring-secondary;
   }
