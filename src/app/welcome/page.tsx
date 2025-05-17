@@ -3,21 +3,21 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { BackgroundBeams } from "../components/ui/background-beams";
+import { BackgroundBeams } from "../../components/ui/background-beams";
 
 export default function BienvenuePage() {
   const [step, setStep] = useState(0);
-  const [selectedEmotion, setSelectedEmotion] = useState("");
-  const [selectedDeparture, setSelectedDeparture] = useState("");
+  const [, setSelectedEmotion] = useState("");
+  const [, setSelectedDeparture] = useState("");
   const [otherDepartureText, setOtherDepartureText] = useState("");
   const [showOtherInput, setShowOtherInput] = useState(false);
   const router = useRouter();
 
   const images = [
-    "/assistant_wave.png",
-    "/assistant_thinking.png",
-    "/assistant_keep.png",
-    "/assistant_idea.png",
+    "/assistant_wave.webp",
+    "/assistant_thinking.webp",
+    "/assistant_keep.webp",
+    "/assistant_idea.webp",
   ];
 
   const departures = [
@@ -64,12 +64,6 @@ export default function BienvenuePage() {
       handleNext();
     }
   };
-
-  // const handleOtherDepartureSubmit = () => {
-  //   if (otherDepartureText.trim() !== "") {
-  //     handleNext();
-  //   }
-  // };
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -143,7 +137,7 @@ export default function BienvenuePage() {
 
         {step === 1 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Qu'est-ce que vous quittez ?</h2>
+            <h2 className="text-2xl font-semibold mb-4">Qu&rsquo;est-ce que vous quittez ?</h2>
             
             <div className="flex flex-col space-y-3 mb-6">
               {departures.map((departure) => (
@@ -203,7 +197,7 @@ export default function BienvenuePage() {
               onClick={handleNext}
               className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
             >
-              J'y vais
+              J&rsquo;y vais
             </button>
           </>
         )}
