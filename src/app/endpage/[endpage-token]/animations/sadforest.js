@@ -1,7 +1,7 @@
-import { useGLTF } from '@react-three/drei'
+import { useGLTF } from "@react-three/drei";
 
 export function SadForest(props) {
-  const { nodes, materials } = useGLTF('/skybox.glb')
+  const { nodes, materials } = useGLTF("/skybox.glb");
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
@@ -15,7 +15,7 @@ export function SadForest(props) {
         />
       </group>
     </group>
-  )
+  );
 }
 
-useGLTF.preload('/skybox.glb')
+useGLTF.preload("/skybox.glb");
