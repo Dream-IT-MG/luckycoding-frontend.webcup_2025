@@ -9,7 +9,7 @@ export default function NewEndpageCard() {
   const router = useRouter();
   const onNewEndpageClick = () => {
     const newGeneratedEndpageCode = "newCodeSimulation";
-    router.push(`/app/endpage/${newGeneratedEndpageCode}`);
+    router.push(`/dashboard/endpage/${newGeneratedEndpageCode}`);
   };
 
   return (

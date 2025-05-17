@@ -3,8 +3,8 @@ import { Raleway } from "next/font/google";
 
 const raleway = Raleway({
   preload: true,
-  subsets: ['latin'],
   variable: "--font-raleway",
+  subsets: ["latin"],
 });
 
 import "./globals.css";
