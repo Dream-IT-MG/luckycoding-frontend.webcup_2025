@@ -8,6 +8,7 @@ import soundoff from './icons/soundoff.png'
 import soundon from './icons/soundon.png'
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import blob from './assets/bitmap2.svg'
+import TypeWriterEffect from 'react-typewriter-effect';
 
 
 export default function Index() {
@@ -51,7 +52,7 @@ export default function Index() {
     "https://cdn.futura-sciences.com/sources/images/demission_1.jpg",
     "https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg",
     "https://clockit.io/wp-content/uploads/2023/06/resignation-email-templates.jpg",
-    "https://www.challenges.fr/entreprise/voici-la-bonne-methode-pour-pousser-un-salarie-a-la-demission_599129",
+    "https://www.challenges.fr/_ipx/f_webp&enlarge_true&fit_cover&s_680x420/cha/static/2025-02/27716.HR.png%3FVersionId=4r4BEUxPvYvcgJWZNnNrL_V21hqQ44vf",
     // "",
     // "",
     // "",
@@ -81,6 +82,21 @@ export default function Index() {
       stop()
     }
   }, [soundIsPlaying])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(indexSlide < descriptions.length - 1){
+        setIndexSlide(indexSlide+1);
+      }else{
+        return () => clearInterval(interval);
+      }
+    }, 4000);
+
+    // Nettoyage quand le composant est démonté
+    return () => clearInterval(interval);
+  }, [indexSlide]);
+
+  const myAppRef = document.querySelector('.scrollable-div')
 
 
   return (
@@ -118,8 +134,16 @@ export default function Index() {
           <div className='rounded-full h-20 w-20 border shadow m-4 inline-block align-top'>
             <Image src={`/emotions/${emotions[indexSlide]}.png`} alt="emotionAvatar" width={200} height={200}/>
           </div>
-          <div className="border m-2 rounded-full shadow self-end h-28 bg-white inline-block align-top p-10">
-            {descriptions[indexSlide]}
+          <div className="scrollable-div border m-2 rounded-full shadow self-end h-28 bg-white inline-block align-top p-10">
+            
+             <TypeWriterEffect
+              startDelay={100}
+              cursorColor="black"
+              text={descriptions[indexSlide]}
+              key={descriptions[indexSlide]}
+              typeSpeed={20}
+              scrollArea={myAppRef}
+            />
           </div>
         </div>
         <div className='absolute bottom-10 right-10'>
@@ -130,7 +154,6 @@ export default function Index() {
             className='w-10 h-10 cursor-pointer object-contain'
           />
         </div>
-        <button type="button" onClick={() => setIndexSlide(indexSlide+1)}>NEXT</button>
     </main>
   )
 }
