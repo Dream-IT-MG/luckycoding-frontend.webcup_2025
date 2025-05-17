@@ -32,13 +32,14 @@ export const userLoginRequest = async ({ email, password }: userLoginRequestProp
       const responseData: responseDataType = {
         status: "error",
         data: data,
+        message: data.detail
       };
       return responseData;
     }
   } catch (error) {
     const responseData: responseDataType = {
       status: "error",
-      data: error,
+      data: error
     };
     return responseData;
   }

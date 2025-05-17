@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "../styles/index.scss";
+import { Toaster } from "react-hot-toast";
 
 const raleway = Raleway({
   preload: true,
@@ -20,7 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${raleway.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster
+          position="bottom-right"
+          reverseOrder={false}
+        />
+      </body>
     </html>
   );
 }

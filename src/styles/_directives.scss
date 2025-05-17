@@ -4,6 +4,10 @@
   }
 
   .input {
-    @apply px-4 py-3 border border-white text-sm text-gray-700 bg-white rounded-lg shadow-sm hover:shadow-md focus:shadow-lg animation focus:outline-none focus:border-white focus:ring-1 focus:ring-secondary;
+    @apply px-4 py-3 border border-white text-sm text-gray-700 bg-white rounded-lg animation focus:outline-none focus:border-white focus:ring-1 focus:ring-secondary;
+  }
+
+  .shadow-dimension {
+    @apply shadow-sm hover:shadow-md focus:shadow-lg;
   }
 }
