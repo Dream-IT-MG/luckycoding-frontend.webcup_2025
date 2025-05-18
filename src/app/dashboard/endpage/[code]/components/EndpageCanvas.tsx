@@ -20,31 +20,21 @@ import { z } from "zod";
 import SectionManagement from "./SectionManagement";
 import ImageMediaInput from "./ImageMediaInput";
 import VideoMediaInput from "./VideoMediaInput";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { PageSection } from "../page";
 
-export type PageSection = {
-  emotion: string;
-  narration: {
-    voicetone: string;
-    text: string;
-  };
-  media: {
-    type: string;
-    props: unknown;
-  } | null;
-};
-
-export default function EndpageCanvas() {
-  const [pageSections, setPageSections] = useState<PageSection[]>([
-    {
-      emotion: "soulage",
-      narration: {
-        voicetone: "",
-        text: "",
-      },
-      media: null,
-    },
-  ]);
-
+export default function EndpageCanvas({
+  pageSections,
+  setPageSections,
+}: {
+  pageSections: PageSection[];
+  setPageSections: React.Dispatch<React.SetStateAction<PageSection[]>>;
+}) {
   const currentEmotion = () => pageSections[currentSection].emotion;
 
   const changeCurrentSectionEmotion = (emotion: string) => {
@@ -111,13 +101,21 @@ export default function EndpageCanvas() {
   return (
     <>
       <div className="rounded-[--radius] h-screen w-full flex flex-col justify-center items-center">
-        <pre>{JSON.stringify(pageSections)}</pre>
         <Sheet>
           <SheetTrigger asChild>
             <div className="flex justify-center items-center">
-              <span className="text-6xl">
-                {emojiForEmotions[currentEmotion()]}
-              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-6xl cursor-pointer">
+                      {emojiForEmotions[currentEmotion()]}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Click me to switch to different emotion</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </SheetTrigger>
           <SheetContent className="overflow-y-scroll" side={"bottom"}>
@@ -128,8 +126,13 @@ export default function EndpageCanvas() {
               </SheetDescription>
 
               {Object.entries(emojiForEmotions).map(([key, emoji]) => (
-                <div key={key} onClick={() => changeCurrentSectionEmotion(key)}>
-                  {emoji} - {key}
+                <div
+                  key={key}
+                  onClick={() => changeCurrentSectionEmotion(key)}
+                  className="h-12 hover:cursor-pointer hover:bg-gray-100 p-5 flex items-center rounded-[--radius] pt-5"
+                >
+                  <span className="text-5xl">{emoji}</span>
+                  <span className="capitalize ml-5">{key}</span>
                 </div>
               ))}
             </SheetHeader>
@@ -296,7 +299,7 @@ export default function EndpageCanvas() {
                     32
                       ? "..."
                       : "")
-                  : "Click to add naration"}
+                  : "Add Naration"}
               </Button>
             </SheetTrigger>
             <SheetContent

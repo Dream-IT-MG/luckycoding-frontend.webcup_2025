@@ -1,5 +1,4 @@
 import Image from "next/image";
-import defaultPreview from "../assets/default.jpg";
 
 export const imageStyle = "w-full h-52 object-cover rounded-[--radius]";
 
@@ -13,7 +12,7 @@ export default function EndpageCard({
   return (
     <div>
       <Image
-        src={endpage.preview == "" ? defaultPreview : endpage.preview}
+        src={endpage.preview == "" ? "/default.jpg" : endpage.preview}
         alt="Endpage preview"
         className={imageStyle}
       />
