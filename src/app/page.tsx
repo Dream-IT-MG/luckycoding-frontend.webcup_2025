@@ -4,7 +4,6 @@ import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BackgroundBeams } from "../components/ui/background-beams";
-import { ApiService } from "@/services/ApiService";
 
 export default function BienvenuePage() {
   const [step, setStep] = useState(0);
@@ -113,13 +112,13 @@ export default function BienvenuePage() {
               Tu viens de terminer une étape dans ta vie ?
             </p>
             <p className="mb-6 text-lg">
-              Ne t'inquiète pas, je suis là pour t'accompager durant cette période !
+              Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant cette période !
               </p>
               <p className="mb-6 text-lg">
-              Il est important d'exprimer ses émotions surant de telle périodes,
+              Il est important d&apos;exprimer ses émotions surant de telle périodes,
               </p>
               <p className="mb-6 text-lg">
-              Je vais t'aider à passer le cap avec Classe .. ou pas.. 
+              Je vais t&apos;aider à passer le cap avec Classe .. ou pas.. 
               alors, alons-y..
             </p>
             <div>
@@ -233,7 +232,6 @@ export default function BienvenuePage() {
           className="w-full h-auto object-contain"
         />
       </div>
-
     </main>
   );
 }

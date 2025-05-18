@@ -29,7 +29,7 @@ deploy:stable:
     - git checkout main
     - git fetch
     - git pull
-    - npm install
+    - npm install --include=optional sharp
     - END
   environment: production
   only:
