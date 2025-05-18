@@ -10,16 +10,3 @@ export const emojiForEmotions: Record<string, string> = {
   decu: "😒",
   libere: "🥹",
 };
-
-export const emotions = [
-  "colere",
-  "triste",
-  "soulage",
-  "nostalgique",
-  "joyeux",
-  // "anxieux",
-  // "reconnaissant",
-  // "fier",
-  // "decu",
-  // "libere",
-];
