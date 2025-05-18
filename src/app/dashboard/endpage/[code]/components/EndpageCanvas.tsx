@@ -26,31 +26,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PageSection } from "../page";
 
-export type PageSection = {
-  emotion: string;
-  narration: {
-    voicetone: string;
-    text: string;
-  };
-  media: {
-    type: string;
-    props: unknown;
-  } | null;
-};
-
-export default function EndpageCanvas() {
-  const [pageSections, setPageSections] = useState<PageSection[]>([
-    {
-      emotion: "soulage",
-      narration: {
-        voicetone: "",
-        text: "",
-      },
-      media: null,
-    },
-  ]);
-
+export default function EndpageCanvas({
+  pageSections,
+  setPageSections,
+}: {
+  pageSections: PageSection[];
+  setPageSections: React.Dispatch<React.SetStateAction<PageSection[]>>;
+}) {
   const currentEmotion = () => pageSections[currentSection].emotion;
 
   const changeCurrentSectionEmotion = (emotion: string) => {
