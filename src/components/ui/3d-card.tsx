@@ -35,14 +35,14 @@ export const CardContainer = ({
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsMouseEntered(true);
     if (!containerRef.current) return;
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!containerRef.current) return;

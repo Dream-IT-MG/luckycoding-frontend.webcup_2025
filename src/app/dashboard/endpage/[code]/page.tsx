@@ -8,6 +8,8 @@ export default async function App({
 }) {
   const { code } = await params;
 
+  console.log(code);
+
   return (
     <div className="relative flex justify-center items-center">
       <Navbar />
