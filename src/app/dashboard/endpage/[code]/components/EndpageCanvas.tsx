@@ -20,6 +20,12 @@ import { z } from "zod";
 import SectionManagement from "./SectionManagement";
 import ImageMediaInput from "./ImageMediaInput";
 import VideoMediaInput from "./VideoMediaInput";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export type PageSection = {
   emotion: string;
@@ -114,9 +120,18 @@ export default function EndpageCanvas() {
         <Sheet>
           <SheetTrigger asChild>
             <div className="flex justify-center items-center">
-              <span className="text-6xl">
-                {emojiForEmotions[currentEmotion()]}
-              </span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-6xl cursor-pointer">
+                      {emojiForEmotions[currentEmotion()]}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Click me to switch to different emotion</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </SheetTrigger>
           <SheetContent className="overflow-y-scroll" side={"bottom"}>
