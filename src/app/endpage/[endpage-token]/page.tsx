@@ -9,9 +9,6 @@ import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
 import { emojiForEmotions } from "@/utils/emotions";
 
-const serverMockup = [{"emotion":"colere","narration":{"voicetone":"","text":"Bonjour, Je m'appelle K"},"media":{"type":"image","props":"https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg"}},{"emotion":"triste","narration":{"voicetone":"","text":"Ca faisait longtemps que je n'avais plus e"},"media":{"type":"image","props":"https://cdn.futura-sciences.com/sources/images/demission_1.jpg"}},{"emotion":"soulage","narration":{"voicetone":"","text":"Il y avait ce soit disant 'manager' qui "},"media":{"type":"image","props":"https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg"}}]
-
-
 export default function Index() {
   const [soundIsPlaying, setSoundIsPlaying] = useState(false);
   const [indexSlide, setIndexSlide] = useState(0);
@@ -52,9 +49,14 @@ export default function Index() {
 
   // Fonction simplifiée pour jouer le texte avec TTS
   const speakText = (text: string) => {
+    // Arrêter toute synthèse vocale en cours
+    if (speechSynthRef.current) {
+      window.speechSynthesis.cancel();
+    }
     
     if (!ttsEnabled) return;
     
+    // Créer une nouvelle instance de SpeechSynthesisUtterance
     const utterance = new SpeechSynthesisUtterance(text);
     
     // Essayer de trouver une voix française
@@ -64,6 +66,7 @@ export default function Index() {
       utterance.voice = frenchVoice;
     }
     
+    // Événements pour suivre l'état de la synthèse vocale
     utterance.onstart = () => {
       setIsSpeaking(true);
     };
@@ -78,20 +81,27 @@ export default function Index() {
       speechSynthRef.current = null;
     };
     
+    // Stocker la référence à l'utterance actuelle
     speechSynthRef.current = utterance;
     
+    // Jouer la synthèse vocale
     window.speechSynthesis.speak(utterance);
   };
 
+  // Initialiser les voix au chargement du composant
   useEffect(() => {
+    // Fonction pour initialiser les voix
     const initVoices = () => {
       window.speechSynthesis.getVoices();
     };
     
+    // Appeler initVoices une fois pour déclencher le chargement des voix
     initVoices();
     
+    // Écouter l'événement voiceschanged
     window.speechSynthesis.onvoiceschanged = initVoices;
     
+    // Nettoyage
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
       if (speechSynthRef.current) {
@@ -107,6 +117,7 @@ export default function Index() {
     }
   }, [duration]);
 
+  // Gérer l'audio de fond
   useEffect(() => {
     if (soundIsPlaying) {
       playSound();
@@ -115,7 +126,9 @@ export default function Index() {
     }
   }, [soundIsPlaying]);
 
+  // Gérer le changement de slide et déclencher le TTS
   useEffect(() => {
+    // S'assurer que l'audio joue si le son est activé
     if (soundIsPlaying && sound) {
       playSound();
     }
@@ -133,7 +146,7 @@ export default function Index() {
 
     // Nettoyage quand le composant est démonté
     return () => clearInterval(interval);
-  }, [descriptions, indexSlide]);
+  }, [indexSlide]);
 
   const myAppRef = document.querySelector(".scrollable-div");
 
