@@ -8,8 +8,9 @@ import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
 import { emojiForEmotions } from "@/utils/emotions";
+import {Dialog,DialogContent,DialogTitle} from "@/components/ui/dialog"
 
-const serverMockup = [{"emotion":"colere","narration":{"voicetone":"","text":"Bonjour, Je m'appelle K"},"media":{"type":"image","props":"https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg"}},{"emotion":"triste","narration":{"voicetone":"","text":"Ca faisait longtemps que je n'avais plus e"},"media":{"type":"image","props":"https://cdn.futura-sciences.com/sources/images/demission_1.jpg"}},{"emotion":"soulage","narration":{"voicetone":"","text":"Il y avait ce soit disant 'manager' qui "},"media":{"type":"image","props":"https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg"}}]
+const serverMockup = [{ "emotion": "colere", "narration": { "voicetone": "", "text": "Bonjour, Je m'appelle K" }, "media": { "type": "image", "props": "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg" } }, { "emotion": "triste", "narration": { "voicetone": "", "text": "Ca faisait longtemps que je n'avais plus e" }, "media": { "type": "image", "props": "https://cdn.futura-sciences.com/sources/images/demission_1.jpg" } }, { "emotion": "soulage", "narration": { "voicetone": "", "text": "Il y avait ce soit disant 'manager' qui " }, "media": { "type": "image", "props": "https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg" } }]
 
 
 export default function Index() {
@@ -20,6 +21,7 @@ export default function Index() {
   const [images, setImages] = useState<string[]>([]);
   const [descriptions, setDescriptions] = useState<string[]>([]);
   const [emotions, setEmotions] = useState<string[]>([]);
+  const [open, setOpen] = useState(false);
 
   const playBackgroundSound = () => {
     sound?.volume(0.4);
@@ -27,7 +29,10 @@ export default function Index() {
     setSoundIsPlaying(true);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
+    // serverMockup.push(
+    //   { "emotion": "soulage", "narration": { "voicetone": "", "text": "The EndPage." }, "media": { "type": "image", "props": "/gif/claquerporte.gif" } }
+    // )
     const imgs = serverMockup.map((item) => item.media.props);
     const descs = serverMockup.map((item) => item.narration.text);
     const emos = serverMockup.map((item) => item.emotion);
@@ -35,7 +40,17 @@ export default function Index() {
     setImages(imgs);
     setDescriptions(descs);
     setEmotions(emos);
-  }, []) 
+  }, [])
+
+   useEffect(() => {
+    if (open) {
+      const timer = setTimeout(() => {
+        setOpen(false); // Close after 2s
+      }, 2000);
+
+      return () => clearTimeout(timer); // Cleanup
+    }
+  }, [open]);
 
   // const images = [
   //   "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg",
@@ -88,6 +103,7 @@ export default function Index() {
   }, [soundIsPlaying]);
 
   useEffect(() => {
+    
     const interval = setInterval(() => {
       if (indexSlide < descriptions.length - 1) {
         setIndexSlide(indexSlide + 1);
@@ -99,6 +115,16 @@ export default function Index() {
     // Nettoyage quand le composant est démonté
     return () => clearInterval(interval);
   }, [descriptions, indexSlide]);
+
+  useEffect(() => {
+      if (indexSlide == descriptions.length -1) {
+        const timer = setTimeout(() => {
+        setOpen(true)
+      }, 4000);
+
+      return () => clearTimeout(timer); 
+      }
+  }, [indexSlide]);
 
   const myAppRef = document.querySelector(".scrollable-div");
 
@@ -161,6 +187,16 @@ export default function Index() {
           className="w-10 h-10 cursor-pointer object-contain"
         />
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogTitle></DialogTitle>
+        <img
+          alt="dfdf"
+          src="/gif/claquerporte.gif"
+          className="w-full h-auto"
+        />
+      </DialogContent>
+    </Dialog>
     </main>
   );
 }
