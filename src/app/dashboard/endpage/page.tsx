@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import bg1 from "./assets/bg1.jpg";
 import { PageWrapper } from "./components/PageWrapper";
 import EndpageCard from "./components/EndpageCard";
 import NewEndpageCard from "./components/NewEndpageCard";
@@ -12,6 +12,7 @@ const endpages = [
 ];
 
 export default function Page() {
+  redirect("/dashboard/endpage/new");
   return (
     <>
       <div>
@@ -19,7 +20,7 @@ export default function Page() {
           <div className="relative rounded-[--radius] flex">
             <Image
               alt="image 3"
-              src={bg1}
+              src={"/bg1.jpg"}
               style={{
                 objectPosition: "50% 40%",
               }}

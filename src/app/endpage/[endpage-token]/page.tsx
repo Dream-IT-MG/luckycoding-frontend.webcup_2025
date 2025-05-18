@@ -27,6 +27,10 @@ export default function Index() {
   const params = useParams();
   const token = params["endpage-token"];
 
+  const [images, setImages] = useState<string[]>([]);
+  const [descriptions, setDescriptions] = useState<string[]>([]);
+  const [emotions, setEmotions] = useState<string[]>([]);
+
   const [soundIsPlaying, setSoundIsPlaying] = useState(false);
   const [indexSlide, setIndexSlide] = useState(0);
   const [playSound, { sound, stop, duration }] = useSound("/sakura.mp3");
@@ -46,37 +50,37 @@ export default function Index() {
     if (speechSynthRef.current) {
       window.speechSynthesis.cancel();
     }
-    
+
     if (!ttsEnabled) return;
-    
+
     // Créer une nouvelle instance de SpeechSynthesisUtterance
     const utterance = new SpeechSynthesisUtterance(text);
-    
+
     // Essayer de trouver une voix française
     const voices = window.speechSynthesis.getVoices();
-    const frenchVoice = voices.find(voice => voice.lang.includes('fr'));
+    const frenchVoice = voices.find((voice) => voice.lang.includes("fr"));
     if (frenchVoice) {
       utterance.voice = frenchVoice;
     }
-    
+
     // Événements pour suivre l'état de la synthèse vocale
     utterance.onstart = () => {
       setIsSpeaking(true);
     };
-    
+
     utterance.onend = () => {
       setIsSpeaking(false);
       speechSynthRef.current = null;
     };
-    
+
     utterance.onerror = () => {
       setIsSpeaking(false);
       speechSynthRef.current = null;
     };
-    
+
     // Stocker la référence à l'utterance actuelle
     speechSynthRef.current = utterance;
-    
+
     // Jouer la synthèse vocale
     window.speechSynthesis.speak(utterance);
   };
@@ -87,13 +91,13 @@ export default function Index() {
     const initVoices = () => {
       window.speechSynthesis.getVoices();
     };
-    
+
     // Appeler initVoices une fois pour déclencher le chargement des voix
     initVoices();
-    
+
     // Écouter l'événement voiceschanged
     window.speechSynthesis.onvoiceschanged = initVoices;
-    
+
     // Nettoyage
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
@@ -143,10 +147,10 @@ export default function Index() {
     if (soundIsPlaying && sound) {
       playSound();
     }
-    
+
     // Jouer le texte actuel
     speakText(descriptions[indexSlide]);
-    
+
     const interval = setInterval(() => {
       if (indexSlide < descriptions.length - 1) {
         setIndexSlide(indexSlide + 1);
@@ -203,8 +207,8 @@ export default function Index() {
         </div>
         <div className="flex-1 scrollable-div border m-2 rounded-full shadow self-end h-28 bg-white inline-block align-top p-10 items-center gap-4">
           <div className="flex text-center items-center justify-center">
-            <div 
-              onClick={() => setTtsEnabled(!ttsEnabled)} 
+            <div
+              onClick={() => setTtsEnabled(!ttsEnabled)}
               className="w-10 h-10 cursor-pointer flex items-center justify-center bg-white rounded-full shadow-md mr-2"
               title={ttsEnabled ? "Désactiver la voix" : "Activer la voix"}
             >
