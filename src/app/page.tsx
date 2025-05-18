@@ -4,14 +4,19 @@ import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BackgroundBeams } from "../components/ui/background-beams";
+import { createPageRequest } from "./endpage/services/page-service";
+import toast from "react-hot-toast";
+import { usePageActions } from "./endpage/stores/page-store";
+import { PageType } from "./endpage/types/page-type";
 
 export default function BienvenuePage() {
   const [step, setStep] = useState(0);
-  const [, setSelectedEmotion] = useState("");
-  const [, setSelectedDeparture] = useState("");
+  const [emotion, setSelectedEmotion] = useState("");
+  const [departure, setSelectedDeparture] = useState("");
   const [otherDepartureText, setOtherDepartureText] = useState("");
   const [showOtherInput, setShowOtherInput] = useState(false);
   const router = useRouter();
+  const { setPage }= usePageActions();
 
   const images = [
     "/assistant_wave.webp",
@@ -41,11 +46,21 @@ export default function BienvenuePage() {
     { id: "libere", label: "Libéré(e)", emoji: "🕊️", color: "bg-pink-400" },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      router.push("/home");
+      const response = await createPageRequest(({
+        emotion: emotion,
+        situation: departure
+      }));
+
+      if (response.status === "success") {
+        setPage(response.data as PageType)
+        router.push("/signup");
+      } else {
+        toast.error("Veuillez réessayer plus tard");
+      }
     }
   };
 
