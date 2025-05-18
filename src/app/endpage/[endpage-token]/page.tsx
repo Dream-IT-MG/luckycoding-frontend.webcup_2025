@@ -20,6 +20,7 @@ export default function Index() {
     setSoundIsPlaying(true);
   };
 
+
   const images = [
     "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg",
     "https://cdn.futura-sciences.com/sources/images/demission_1.jpg",
@@ -32,6 +33,21 @@ export default function Index() {
     // "",
     // "",
   ];
+
+
+  const emotions = [
+    "colere",
+    "triste",
+    "soulage",
+    "nostalgique",
+    "joyeux",
+    // "anxieux",
+    // "reconnaissant",
+    // "fier",
+    // "decu",
+    // "libere",
+  ];
+
 
   const descriptions = [
     "Bonjour, Je m'appelle Khanie et j'ai quitté mon travail !",
@@ -71,27 +87,19 @@ export default function Index() {
   const myAppRef = document.querySelector(".scrollable-div");
 
   return (
-    <main className="bg-gray-60 h-screen flex items-center justify-center">
-      <div className="mainContent">
+    <main className="bg-gray-60 h-screen flex items-center justify-center overflow-hidden">
+      <div className="mainContent w-full h-full flex justify-center items-center">
         <CardContainer className="inter-var">
-          <CardItem translateZ="100" className="w-full mt-4">
+          <CardItem translateZ="100" className="w-[60vw] mt-4 ">
             <img
               src={images[indexSlide]}
               height={200}
               width={200}
-              className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+              className="h-auto w-full rounded-xl group-hover/card:shadow-xl"
               alt="thumbnail"
             />
           </CardItem>
         </CardContainer>
-        {/* <div className="w-[50vw] h-[50vh] border shadow rounded-lg">
-            <img
-              src="https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg"
-              alt="main"
-              className="w-full"
-            />
-
-          </div> */}
       </div>
       <Image
         src={blob}
