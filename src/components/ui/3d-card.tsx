@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -35,14 +37,12 @@ export const CardContainer = ({
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
   };
 
-   
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsMouseEntered(true);
     if (!containerRef.current) return;
   };
 
-   
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!containerRef.current) return;

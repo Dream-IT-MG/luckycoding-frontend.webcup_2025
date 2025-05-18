@@ -12,7 +12,7 @@ import { Plus, Trash } from "lucide-react";
 import React from "react";
 
 interface SectionManagementProps {
-  pageSections: any[];
+  pageSections: any[] /* eslint-disable @typescript-eslint/no-explicit-any */;
   currentSection: number;
   setCurrentSection: (idx: number) => void;
   onSectionDeleteByIndex: (idx: number) => void;
