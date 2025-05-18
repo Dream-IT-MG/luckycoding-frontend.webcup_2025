@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { BackgroundBeams } from "../../../components/ui/background-beams";
 
 export const metadata: Metadata = {
-  title: "Connexion",
-  description: "Page de connexion",
+  title: "Inscription",
+  description: "Page d'inscription",
 };
 
 export default function LoginLayout({

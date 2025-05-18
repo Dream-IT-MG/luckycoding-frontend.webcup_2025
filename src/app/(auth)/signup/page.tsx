@@ -11,7 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userLoginRequest } from "../services/auth-service";
+import { userLoginRequest, userSignupRequest } from "../services/auth-service";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Spinner from "@/components/ui/spinner";
@@ -19,6 +19,13 @@ import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "L'adresse e-mail est obligatoire." }),
+  username: z.string()
+    .min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères")
+    .max(20, "Le nom d'utilisateur ne peut pas dépasser 20 caractères")
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets et underscores"
+    ),
   password: z.string().min(1, { message: "Le mot de passe est obligatoire." }),
 });
 
@@ -30,6 +37,7 @@ export default function LoginPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      username: "",
       password: "",
     },
   });
@@ -37,12 +45,17 @@ export default function LoginPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     
-    const response = await userLoginRequest({
+    const response = await userSignupRequest({
       email: values.email,
+      username: values.username,
       password: values.password
     });
 
     if (response.status === "success") {
+      userLoginRequest(({
+        email: values.email,
+        password: values.password
+      }))
       router.push("dashboard");
     } else {
       toast.error(response.message ?? "Veuillez réessayez plus tard");
@@ -84,7 +97,7 @@ export default function LoginPage() {
       <div 
         className="tracking-gradient max-w-sm w-full">
         <div className="grid gap-4">
-          <h1 className="text-center text-white font-semibold text-3xl">Connexion</h1>
+          <h1 className="text-center text-white font-semibold text-3xl">Inscription</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
               <FormField
@@ -94,6 +107,18 @@ export default function LoginPage() {
                   <FormItem>
                     <FormControl>
                       <input className="input shadow-dimension w-full" type="email" placeholder="Adresse e-mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <input className="input shadow-dimension w-full" type="text" placeholder="Nom d'utilisateur" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -112,11 +137,11 @@ export default function LoginPage() {
                 )}
               />
               <button className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700">
-                Se connecter
+                Créer un compte
               </button>
             </form>
           </Form>
-          <p className="text-white text-center">Pas de compte ? Inscrivez-vous <Link href="/signup" className="text-pink-600">ici</Link></p>
+          <p className="text-white text-center">Déjà inscrit ? Connectez-vous <Link href="/login" className="text-pink-600">ici</Link></p>
         </div>
       </div>
     )
