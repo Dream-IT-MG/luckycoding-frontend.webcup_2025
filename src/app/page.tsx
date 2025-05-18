@@ -21,21 +21,61 @@ export default function BienvenuePage() {
   ];
 
   const departures = [
-    { id: "travail", label: "Mon travail qui est toxique", emoji: "💼", color: "bg-red-500/20 border-red-500/50 border-2", otherColor:"bg-red-500" },
-    { id: "famille", label: "Mon association pour partir vivre à l'étranger", emoji: "🌍", color: "bg-blue-500/20 border-blue-500/50 border-2", otherColor:"bg-blue-500"},
-    { id: "relation", label: "Mon petit ami / ma petite amie", emoji: "💔", color: "bg-purple-500/20 border-purple-500/50 border-2", otherColor:"bg-purple-500" },
-    { id: "ville", label: "Ma ville et mes amis pour un nouveau départ", emoji: "🏙️", color: "bg-amber-500/20 border-amber-500/50 border-2", otherColor:"bg-amber-500" },
-    { id: "autre", label: "Autre chose (à préciser)", emoji: "✏️", color: "bg-gray-400/20 border-gray-500/50 border-2", otherColor:"bg-gray-400" },
+    {
+      id: "travail",
+      label: "Mon travail qui est toxique",
+      emoji: "💼",
+      color: "bg-red-500/20 border-red-500/50 border-2",
+      otherColor: "bg-red-500",
+    },
+    {
+      id: "famille",
+      label: "Mon association pour partir vivre à l'étranger",
+      emoji: "🌍",
+      color: "bg-blue-500/20 border-blue-500/50 border-2",
+      otherColor: "bg-blue-500",
+    },
+    {
+      id: "relation",
+      label: "Mon petit ami / ma petite amie",
+      emoji: "💔",
+      color: "bg-purple-500/20 border-purple-500/50 border-2",
+      otherColor: "bg-purple-500",
+    },
+    {
+      id: "ville",
+      label: "Ma ville et mes amis pour un nouveau départ",
+      emoji: "🏙️",
+      color: "bg-amber-500/20 border-amber-500/50 border-2",
+      otherColor: "bg-amber-500",
+    },
+    {
+      id: "autre",
+      label: "Autre chose (à préciser)",
+      emoji: "✏️",
+      color: "bg-gray-400/20 border-gray-500/50 border-2",
+      otherColor: "bg-gray-400",
+    },
   ];
 
   const emotions = [
     { id: "colere", label: "En colère", emoji: "😠", color: "bg-red-500" },
     { id: "triste", label: "Triste", emoji: "😢", color: "bg-blue-400" },
     { id: "soulage", label: "Soulagé(e)", emoji: "😌", color: "bg-green-400" },
-    { id: "nostalgique", label: "Nostalgique", emoji: "🥲", color: "bg-amber-300" },
+    {
+      id: "nostalgique",
+      label: "Nostalgique",
+      emoji: "🥲",
+      color: "bg-amber-300",
+    },
     { id: "joyeux", label: "Joyeux/se", emoji: "😄", color: "bg-yellow-400" },
     { id: "anxieux", label: "Anxieux/se", emoji: "😰", color: "bg-cyan-400" },
-    { id: "reconnaissant", label: "Reconnaissant(e)", emoji: "🙏", color: "bg-purple-400" },
+    {
+      id: "reconnaissant",
+      label: "Reconnaissant(e)",
+      emoji: "🙏",
+      color: "bg-purple-400",
+    },
     { id: "fier", label: "Fier/ère", emoji: "🦚", color: "bg-teal-400" },
     { id: "decu", label: "Déçu(e)", emoji: "😔", color: "bg-indigo-400" },
     { id: "libere", label: "Libéré(e)", emoji: "🕊️", color: "bg-pink-400" },
@@ -45,7 +85,7 @@ export default function BienvenuePage() {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      router.push("/home");
+      router.push("/dashboard/endpage/");
     }
   };
 
@@ -56,7 +96,7 @@ export default function BienvenuePage() {
 
   const handleDepartureSelect = (departureId: SetStateAction<string>) => {
     setSelectedDeparture(departureId);
-    
+
     if (departureId === "autre") {
       setShowOtherInput(true);
     } else {
@@ -112,13 +152,15 @@ export default function BienvenuePage() {
               Tu viens de terminer une étape dans ta vie ?
             </p>
             <p className="mb-6 text-lg">
-              Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant cette période !
-              </p>
-              <p className="mb-6 text-lg">
-              Il est important d&apos;exprimer ses émotions surant de telle périodes,
-              </p>
-              <p className="mb-6 text-lg">
-              Je vais t&apos;aider à passer le cap avec Classe .. ou pas.. 
+              Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant
+              cette période !
+            </p>
+            <p className="mb-6 text-lg">
+              Il est important d&apos;exprimer ses émotions surant de telle
+              périodes,
+            </p>
+            <p className="mb-6 text-lg">
+              Je vais t&apos;aider à passer le cap avec Classe .. ou pas..
               alors, alons-y..
             </p>
             <div>
@@ -134,21 +176,28 @@ export default function BienvenuePage() {
 
         {step === 1 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Alors.. que vas-tu laisser derrière ?</h2>
-            
+            <h2 className="text-2xl font-semibold mb-4">
+              Alors.. que vas-tu laisser derrière ?
+            </h2>
+
             <div className="flex flex-col space-y-3 mb-6">
               {departures.map((departure) => (
                 <div
                   key={departure.id}
                   onClick={() => handleDepartureSelect(departure.id)}
-                 className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-10">
+                  className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-10"
+                >
                   {/* <div className={`size-16 bg-primary absolute top-[calc(50%-2rem)] left-0 flex justify-center items-center rounded-lg  ${departure.otherColor}`}> */}
-                      <div className="text-5xl absolute top-[calc(50%-2rem)] left-[15px]">{departure.emoji}</div>
+                  <div className="text-5xl absolute top-[calc(50%-2rem)] left-[15px]">
+                    {departure.emoji}
+                  </div>
                   {/* </div> */}
                   <div
-                      className={` h-24 ml-12 p-6 pl-16 ${departure.color} bg-opacity-80  flex items-center p-4 rounded-lg shadow-md  border border-transparent w-full`}>
-                      {departure.label}</div>
-              </div>
+                    className={` h-24 ml-12 p-6 pl-16 ${departure.color} bg-opacity-80  flex items-center p-4 rounded-lg shadow-md  border border-transparent w-full`}
+                  >
+                    {departure.label}
+                  </div>
+                </div>
                 // <div
                 //   key={departure.id}
                 //   onClick={() => handleDepartureSelect(departure.id)}
@@ -181,7 +230,9 @@ export default function BienvenuePage() {
 
         {step === 2 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Je vois.. et que ressens-tu par rapport à cela ?</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Je vois.. et que ressens-tu par rapport à cela ?
+            </h2>
             <div className="grid grid-cols-3 gap-3">
               {emotions.map((emotion) => (
                 <div
@@ -199,24 +250,24 @@ export default function BienvenuePage() {
 
         {step === 3 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Bien, exprimons tes émotions maintenant !</h2>
-            <p className="mb-6">Exprimer ce que l'on ressens est agréablement satisfaisant !
-              </p>
-              <p className="mb-6">
+            <h2 className="text-2xl font-semibold mb-4">
+              Bien, exprimons tes émotions maintenant !
+            </h2>
+            <p className="mb-6">
+              Exprimer ce que l'on ressens est agréablement satisfaisant !
+            </p>
+            <p className="mb-6">
               Elle sera mémorable, partageable, et un peu thérapeutique.
-              </p>
-              <p className="mb-6">
-              Prêt à claquer la porte ?
-              </p>
-              <div>
-                <button
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-                >
-                  Allons-y !
-                </button>
-
-              </div>
+            </p>
+            <p className="mb-6">Prêt à claquer la porte ?</p>
+            <div>
+              <button
+                onClick={handleNext}
+                className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+              >
+                Allons-y !
+              </button>
+            </div>
           </>
         )}
       </div>

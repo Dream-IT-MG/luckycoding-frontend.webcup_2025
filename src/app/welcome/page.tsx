@@ -21,21 +21,56 @@ export default function BienvenuePage() {
   ];
 
   const departures = [
-    { id: "travail", label: "Mon travail qui est toxique", emoji: "💼", color: "bg-red-500" },
-    { id: "famille", label: "Mon association pour partir vivre à l'étranger", emoji: "🌍", color: "bg-blue-500" },
-    { id: "relation", label: "Mon petit ami / ma petite amie", emoji: "💔", color: "bg-purple-500" },
-    { id: "ville", label: "Ma ville et mes amis pour un nouveau départ", emoji: "🏙️", color: "bg-amber-500" },
-    { id: "autre", label: "Autre chose (à préciser)", emoji: "✏️", color: "bg-gray-400" },
+    {
+      id: "travail",
+      label: "Mon travail qui est toxique",
+      emoji: "💼",
+      color: "bg-red-500",
+    },
+    {
+      id: "famille",
+      label: "Mon association pour partir vivre à l'étranger",
+      emoji: "🌍",
+      color: "bg-blue-500",
+    },
+    {
+      id: "relation",
+      label: "Mon petit ami / ma petite amie",
+      emoji: "💔",
+      color: "bg-purple-500",
+    },
+    {
+      id: "ville",
+      label: "Ma ville et mes amis pour un nouveau départ",
+      emoji: "🏙️",
+      color: "bg-amber-500",
+    },
+    {
+      id: "autre",
+      label: "Autre chose (à préciser)",
+      emoji: "✏️",
+      color: "bg-gray-400",
+    },
   ];
 
   const emotions = [
     { id: "colere", label: "En colère", emoji: "😠", color: "bg-red-500" },
     { id: "triste", label: "Triste", emoji: "😢", color: "bg-blue-400" },
     { id: "soulage", label: "Soulagé(e)", emoji: "😌", color: "bg-green-400" },
-    { id: "nostalgique", label: "Nostalgique", emoji: "🥲", color: "bg-amber-300" },
+    {
+      id: "nostalgique",
+      label: "Nostalgique",
+      emoji: "🥲",
+      color: "bg-amber-300",
+    },
     { id: "joyeux", label: "Joyeux/se", emoji: "😄", color: "bg-yellow-400" },
     { id: "anxieux", label: "Anxieux/se", emoji: "😰", color: "bg-cyan-400" },
-    { id: "reconnaissant", label: "Reconnaissant(e)", emoji: "🙏", color: "bg-purple-400" },
+    {
+      id: "reconnaissant",
+      label: "Reconnaissant(e)",
+      emoji: "🙏",
+      color: "bg-purple-400",
+    },
     { id: "fier", label: "Fier/ère", emoji: "🦚", color: "bg-teal-400" },
     { id: "decu", label: "Déçu(e)", emoji: "😔", color: "bg-indigo-400" },
     { id: "libere", label: "Libéré(e)", emoji: "🕊️", color: "bg-pink-400" },
@@ -45,7 +80,7 @@ export default function BienvenuePage() {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      router.push("/home");
+      router.push("/dashboard/endpage/");
     }
   };
 
@@ -56,7 +91,7 @@ export default function BienvenuePage() {
 
   const handleDepartureSelect = (departureId: SetStateAction<string>) => {
     setSelectedDeparture(departureId);
-    
+
     if (departureId === "autre") {
       setShowOtherInput(true);
     } else {
@@ -125,12 +160,15 @@ export default function BienvenuePage() {
       <div className="relative z-10 w-2/3 flex flex-col justify-center p-12 text-white">
         {step === 0 && (
           <>
-            <h1 className="text-5xl font-bold mb-4">Bienvenue sur TheEnd.page</h1>
+            <h1 className="text-5xl font-bold mb-4">
+              Bienvenue sur TheEnd.page
+            </h1>
             <p className="mb-6 text-lg">
               La plateforme pour donner du style à vos au revoir...
             </p>
             <p className="mb-6 text-lg">
-              Rage, larmes, enthousiasme, gifs ou classe absolue, à vous de choisir comment claquer la porte.
+              Rage, larmes, enthousiasme, gifs ou classe absolue, à vous de
+              choisir comment claquer la porte.
             </p>
             <button
               onClick={handleNext}
@@ -143,8 +181,10 @@ export default function BienvenuePage() {
 
         {step === 1 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Qu'est-ce que vous quittez ?</h2>
-            
+            <h2 className="text-2xl font-semibold mb-4">
+              Qu'est-ce que vous quittez ?
+            </h2>
+
             <div className="flex flex-col space-y-3 mb-6">
               {departures.map((departure) => (
                 <div
@@ -179,7 +219,9 @@ export default function BienvenuePage() {
 
         {step === 2 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Quel ton pour ce départ ?</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Quel ton pour ce départ ?
+            </h2>
             <div className="grid grid-cols-3 gap-3">
               {emotions.map((emotion) => (
                 <div
@@ -197,8 +239,13 @@ export default function BienvenuePage() {
 
         {step === 3 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Prêt à claquer la porte ?</h2>
-            <p className="mb-6">Votre page de départ est presque prête. Elle sera mémorable, partageable, et un peu thérapeutique.</p>
+            <h2 className="text-2xl font-semibold mb-4">
+              Prêt à claquer la porte ?
+            </h2>
+            <p className="mb-6">
+              Votre page de départ est presque prête. Elle sera mémorable,
+              partageable, et un peu thérapeutique.
+            </p>
             <button
               onClick={handleNext}
               className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
