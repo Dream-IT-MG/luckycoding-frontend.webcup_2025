@@ -7,6 +7,7 @@ import soundon from "./icons/soundon.png";
 import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
+import { emojiForEmotions, emotions } from "@/utils/emotions";
 
 export default function Index() {
   const [soundIsPlaying, setSoundIsPlaying] = useState(false);
@@ -18,31 +19,6 @@ export default function Index() {
     sound?.loop(true);
     setSoundIsPlaying(true);
   };
-
-  const emojis_for_emotions: Record<string, string> = {
-    colere: "😡",
-    triste: "😭",
-    soulage: "😮‍💨",
-    nostalgique: "💭",
-    joyeux: "😆",
-    anxieux: "🫥",
-    reconnaissant: "😍",
-    fier: "👌",
-    decu: "😒",
-    libere: "🥹",
-  };
-  const emotions = [
-    "colere",
-    "triste",
-    "soulage",
-    "nostalgique",
-    "joyeux",
-    // "anxieux",
-    // "reconnaissant",
-    // "fier",
-    // "decu",
-    // "libere",
-  ];
 
   const images = [
     "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg",
@@ -128,7 +104,7 @@ export default function Index() {
         className="absolute top-0 left-0 h-[50%] w-auto rotate-[180deg]"
       />
       <div className="absolute top-20 right-[15rem] text-6xl rotate-[20deg]">
-        {emojis_for_emotions[emotions[indexSlide]]}
+        {emojiForEmotions[emotions[indexSlide]]}
       </div>
       <div className="absolute bottom-45 left-[15rem] text-6xl rotate-[-25deg]">
         💼
