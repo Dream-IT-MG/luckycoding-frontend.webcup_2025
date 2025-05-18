@@ -110,7 +110,6 @@ export default function Index() {
   useEffect(() => {
     if (!token || typeof token !== "string") return;
 
-    alert(decodeJSONFromURLParam(token));
     console.log(decodeJSONFromURLParam(token));
     const serverMockup = decodeJSONFromURLParam(token) as MediaItem[];
 
@@ -149,6 +148,8 @@ export default function Index() {
     }
 
     // Jouer le texte actuel
+    alert(descriptions[indexSlide]);
+    console.log(descriptions[indexSlide]);
     speakText(descriptions[indexSlide]);
 
     const interval = setInterval(() => {
