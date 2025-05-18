@@ -1,101 +1,208 @@
+"use client";
+
+import { SetStateAction, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { BackgroundBeams } from "../components/ui/background-beams";
+import { ApiService } from "@/services/ApiService";
 
-export default function Home() {
+export default function BienvenuePage() {
+  const [step, setStep] = useState(0);
+  const [, setSelectedEmotion] = useState("");
+  const [, setSelectedDeparture] = useState("");
+  const [otherDepartureText, setOtherDepartureText] = useState("");
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const router = useRouter();
+
+  const images = [
+    "/assistant_wave.webp",
+    "/assistant_thinking.webp",
+    "/assistant_keep.webp",
+    "/assistant_idea.webp",
+  ];
+
+  const departures = [
+    { id: "travail", label: "Mon travail qui est toxique", emoji: "💼", color: "bg-red-500" },
+    { id: "famille", label: "Mon association pour partir vivre à l'étranger", emoji: "🌍", color: "bg-blue-500" },
+    { id: "relation", label: "Mon petit ami / ma petite amie", emoji: "💔", color: "bg-purple-500" },
+    { id: "ville", label: "Ma ville et mes amis pour un nouveau départ", emoji: "🏙️", color: "bg-amber-500" },
+    { id: "autre", label: "Autre chose (à préciser)", emoji: "✏️", color: "bg-gray-400" },
+  ];
+
+  const emotions = [
+    { id: "colere", label: "En colère", emoji: "😠", color: "bg-red-500" },
+    { id: "triste", label: "Triste", emoji: "😢", color: "bg-blue-400" },
+    { id: "soulage", label: "Soulagé(e)", emoji: "😌", color: "bg-green-400" },
+    { id: "nostalgique", label: "Nostalgique", emoji: "🥲", color: "bg-amber-300" },
+    { id: "joyeux", label: "Joyeux/se", emoji: "😄", color: "bg-yellow-400" },
+    { id: "anxieux", label: "Anxieux/se", emoji: "😰", color: "bg-cyan-400" },
+    { id: "reconnaissant", label: "Reconnaissant(e)", emoji: "🙏", color: "bg-purple-400" },
+    { id: "fier", label: "Fier/ère", emoji: "🦚", color: "bg-teal-400" },
+    { id: "decu", label: "Déçu(e)", emoji: "😔", color: "bg-indigo-400" },
+    { id: "libere", label: "Libéré(e)", emoji: "🕊️", color: "bg-pink-400" },
+  ];
+
+  const handleNext = () => {
+    if (step < 3) {
+      setStep(step + 1);
+    } else {
+      router.push("/home");
+    }
+  };
+
+  const handleEmotionSelect = (emotionId: SetStateAction<string>) => {
+    setSelectedEmotion(emotionId);
+    handleNext();
+  };
+
+  const handleDepartureSelect = (departureId: SetStateAction<string>) => {
+    setSelectedDeparture(departureId);
+    
+    if (departureId === "autre") {
+      setShowOtherInput(true);
+    } else {
+      setShowOtherInput(false);
+      handleNext();
+    }
+  };
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      document.body.style.setProperty("--x", `${e.clientX}px`);
+      document.body.style.setProperty("--y", `${e.clientY}px`);
+      document
+        .querySelector(".tracking-gradient")
+        ?.classList.add("show-gradient");
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        document
+          .querySelector(".tracking-gradient")
+          ?.classList.remove("show-gradient");
+      }, 1000);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main
+      className="tracking-gradient relative flex min-h-screen overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(to right top, #1a345c, #252d51, #292746, #2a223b, #291d31)",
+      }}
+    >
+      {/* Background beams en fond */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <BackgroundBeams />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      {/* Section gauche */}
+      <div className="relative z-10 w-1/3 flex items-center justify-center">
+        <Image
+          src={images[step]}
+          alt="Assistant"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      {/* Section droite */}
+      <div className="relative z-10 w-2/3 flex flex-col justify-center p-12 text-white">
+        {step === 0 && (
+          <>
+            <h1 className="text-5xl font-bold mb-4">Bienvenue sur TheEnd.page</h1>
+            <p className="mb-6 text-lg">
+              La plateforme pour donner du style à vos au revoir...
+            </p>
+            <p className="mb-6 text-lg">
+              Rage, larmes, enthousiasme, gifs ou classe absolue, à vous de choisir comment claquer la porte.
+            </p>
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+            >
+              Commencer
+            </button>
+          </>
+        )}
+
+        {step === 1 && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4">Qu&rsquo;est-ce que vous quittez ?</h2>
+            
+            <div className="flex flex-col space-y-3 mb-6">
+              {departures.map((departure) => (
+                <div
+                  key={departure.id}
+                  onClick={() => handleDepartureSelect(departure.id)}
+                  className={`${departure.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-4 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent w-full`}
+                >
+                  <div className="text-3xl mr-4">{departure.emoji}</div>
+                  <div className="font-medium">{departure.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {showOtherInput && (
+              <div className="mt-4">
+                <textarea
+                  className="mb-4 p-3 text-black border rounded w-full h-24 resize-none"
+                  placeholder="Précisez ce que vous quittez..."
+                  value={otherDepartureText}
+                  onChange={(e) => setOtherDepartureText(e.target.value)}
+                ></textarea>
+                <button
+                  onClick={handleNext}
+                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                >
+                  Envoyer
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4">Quel ton pour ce départ ?</h2>
+            <div className="grid grid-cols-3 gap-3">
+              {emotions.map((emotion) => (
+                <div
+                  key={emotion.id}
+                  onClick={() => handleEmotionSelect(emotion.id)}
+                  className={`${emotion.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-3 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent`}
+                >
+                  <div className="text-3xl mr-3">{emotion.emoji}</div>
+                  <div className="font-medium">{emotion.label}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4">Prêt à claquer la porte ?</h2>
+            <p className="mb-6">Votre page de départ est presque prête. Elle sera mémorable, partageable, et un peu thérapeutique.</p>
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+            >
+              J&rsquo;y vais
+            </button>
+          </>
+        )}
+      </div>
+    </main>
   );
 }
