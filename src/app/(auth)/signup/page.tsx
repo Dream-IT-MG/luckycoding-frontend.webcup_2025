@@ -61,7 +61,7 @@ export default function LoginPage() {
         email: values.email,
         password: values.password
       }))
-      router.push("dashboard");
+      router.push("/dashboard/endpage/")
     } else {
       toast.error(response.message ?? "Veuillez réessayez plus tard");
       setIsLoading(false)

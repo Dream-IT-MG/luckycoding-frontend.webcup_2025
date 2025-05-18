@@ -43,7 +43,7 @@ export default function LoginPage() {
     });
 
     if (response.status === "success") {
-      router.push("dashboard");
+      router.push("/dashboard/endpage/")
     } else {
       toast.error(response.message ?? "Veuillez réessayez plus tard");
       setIsLoading(false)
