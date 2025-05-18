@@ -26,7 +26,12 @@ const formSchema = z.object({
       /^[a-zA-Z0-9_-]+$/,
       "Le nom d'utilisateur ne peut contenir que des lettres, chiffres, tirets et underscores"
     ),
-  password: z.string().min(1, { message: "Le mot de passe est obligatoire." }),
+  password: z.string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+    .regex(/[a-z]/, "Le mot de passe doit contenir au moins une lettre minuscule")
+    .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une lettre majuscule")
+    .regex(/[0-9]/, "Le mot de passe doit contenir au moins un chiffre")
+    .regex(/[^a-zA-Z0-9]/, "Le mot de passe doit contenir au moins un caractère spécial"),
 });
 
 export default function LoginPage() {
