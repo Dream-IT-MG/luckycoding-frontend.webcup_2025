@@ -26,6 +26,7 @@ export const userLoginRequest = async ({ email, password }: userLoginRequestProp
       setCookieToken(access);
       const responseData: responseDataType = {
         status: "success",
+        data: data
       };
       return responseData;
     } else {

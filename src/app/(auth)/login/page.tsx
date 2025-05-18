@@ -16,6 +16,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Spinner from "@/components/ui/spinner";
 import Link from "next/link";
+import { useAuthActions } from "../stores/auth-store";
+import { TokenType } from "../types/auth-type";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "L'adresse e-mail est obligatoire." }),
@@ -25,6 +27,7 @@ const formSchema = z.object({
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { setToken } = useAuthActions();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +46,8 @@ export default function LoginPage() {
     });
 
     if (response.status === "success") {
+      const data = response.data as TokenType
+      setToken(data.access)
       router.push("/dashboard/endpage/")
     } else {
       toast.error(response.message ?? "Veuillez réessayez plus tard");

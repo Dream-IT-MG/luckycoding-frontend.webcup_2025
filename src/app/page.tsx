@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { usePageActions } from "./endpage/stores/page-store";
 import { PageType } from "./endpage/types/page-type";
 import Spinner from "@/components/ui/spinner";
+import { useAuthToken } from "./(auth)/stores/auth-store";
 
 export default function BienvenuePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function BienvenuePage() {
   const [showOtherInput, setShowOtherInput] = useState(false);
   const router = useRouter();
   const { setPage }= usePageActions();
+  const token = useAuthToken();
 
   const images = [
     "/assistant_wave.webp",
@@ -101,7 +103,11 @@ export default function BienvenuePage() {
 
       if (response.status === "success") {
         setPage(response.data as PageType)
-        router.push("/signup");
+        if (token === null) {
+          router.push("/signup");
+        } else {
+          router.push("/dashboard/endpage");
+        }
       } else {
         toast.error("Veuillez réessayer plus tard");
         setIsLoading(false);
