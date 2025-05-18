@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -49,13 +49,39 @@ export default function LoginPage() {
     }
   }
 
+    useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      document.body.style.setProperty("--x", `${e.clientX}px`);
+      document.body.style.setProperty("--y", `${e.clientY}px`);
+      document
+        .querySelector(".tracking-gradient")
+        ?.classList.add("show-gradient");
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        document
+          .querySelector(".tracking-gradient")
+          ?.classList.remove("show-gradient");
+      }, 1000);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     isLoading ? (
       <Spinner />
     ) : (
-      <div className="max-w-sm w-full">
+      <div 
+        className="tracking-gradient max-w-sm w-full">
         <div className="grid gap-4">
-          <h1 className="text-center font-semibold text-3xl">Connexion</h1>
+          <h1 className="text-center text-white font-semibold text-3xl">Connexion</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
               <FormField
@@ -82,7 +108,7 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <button className="w-full bg-primary text-white rounded py-2 shadow-dimension animation" type="submit">
+              <button className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700">
                 Se connecter
               </button>
             </form>
