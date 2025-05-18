@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "../styles/index.scss";
 import { Toaster } from "react-hot-toast";
+import { Toaster as ShadcnToaster } from "@/components/ui/toaster";
 
 const raleway = Raleway({
   preload: true,
@@ -23,10 +24,8 @@ export default function RootLayout({
     <html lang="en" className={`${raleway.variable}`}>
       <body>
         {children}
-        <Toaster
-          position="bottom-right"
-          reverseOrder={false}
-        />
+        <Toaster position="bottom-right" reverseOrder={false} />
+        <ShadcnToaster />
       </body>
     </html>
   );
