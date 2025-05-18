@@ -9,6 +9,7 @@ import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
 import { emojiForEmotions } from "@/utils/emotions";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { decodeJSONFromURLParam } from "@/app/lib/json-url";
 
 type MediaItem = {
@@ -30,13 +31,16 @@ export default function Index() {
   const [images, setImages] = useState<string[]>([]);
   const [descriptions, setDescriptions] = useState<string[]>([]);
   const [emotions, setEmotions] = useState<string[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false); // Nouvel état pour tracker le chargement
 
   const [soundIsPlaying, setSoundIsPlaying] = useState(false);
   const [indexSlide, setIndexSlide] = useState(0);
   const [playSound, { sound, stop, duration }] = useSound("/sakura.mp3");
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [open, setOpen] = useState(false);
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const playBackgroundSound = () => {
     sound?.volume(0.4);
@@ -44,16 +48,22 @@ export default function Index() {
     setSoundIsPlaying(true);
   };
 
-  // Fonction simplifiée pour jouer le texte avec TTS
-  const speakText = (text: string) => {
-    // Arrêter toute synthèse vocale en cours
+  // Fonction pour arrêter la synthèse vocale en cours
+  const stopCurrentSpeech = () => {
     if (speechSynthRef.current) {
       window.speechSynthesis.cancel();
+      speechSynthRef.current = null;
+      setIsSpeaking(false);
     }
+  };
 
-    if (!ttsEnabled) return;
+  // Fonction simplifiée pour jouer le texte avec TTS
+  const speakText = (text: string) => {
+    if (!ttsEnabled || !text) return; // Vérification ajoutée
 
-    // Créer une nouvelle instance de SpeechSynthesisUtterance
+    // Arrêter la synthèse vocale précédente
+    stopCurrentSpeech();
+
     const utterance = new SpeechSynthesisUtterance(text);
 
     // Essayer de trouver une voix française
@@ -63,7 +73,6 @@ export default function Index() {
       utterance.voice = frenchVoice;
     }
 
-    // Événements pour suivre l'état de la synthèse vocale
     utterance.onstart = () => {
       setIsSpeaking(true);
     };
@@ -78,51 +87,65 @@ export default function Index() {
       speechSynthRef.current = null;
     };
 
-    // Stocker la référence à l'utterance actuelle
     speechSynthRef.current = utterance;
-
-    // Jouer la synthèse vocale
     window.speechSynthesis.speak(utterance);
   };
 
-  // Initialiser les voix au chargement du composant
+  // Effet pour fermer la dialog après 2s
   useEffect(() => {
-    // Fonction pour initialiser les voix
-    const initVoices = () => {
-      window.speechSynthesis.getVoices();
-    };
+    if (open) {
+      const timer = setTimeout(() => {
+        setOpen(false);
+      }, 2000);
 
-    // Appeler initVoices une fois pour déclencher le chargement des voix
-    initVoices();
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
-    // Écouter l'événement voiceschanged
-    window.speechSynthesis.onvoiceschanged = initVoices;
+  // Effet pour ouvrir la dialog au dernier slide
+  useEffect(() => {
+    if (dataLoaded && indexSlide === descriptions.length - 1) {
+      const timer = setTimeout(() => {
+        setOpen(true);
+      }, 4000);
 
-    // Nettoyage
-    return () => {
-      window.speechSynthesis.onvoiceschanged = null;
-      if (speechSynthRef.current) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [indexSlide, descriptions.length, dataLoaded]);
 
+  // Effet pour initialiser les données et les voix
   useEffect(() => {
     if (!token || typeof token !== "string") return;
 
-    console.log(decodeJSONFromURLParam(token));
-    const serverMockup = decodeJSONFromURLParam(token) as MediaItem[];
+    try {
+      const serverMockup = decodeJSONFromURLParam(token) as MediaItem[];
 
-    const imgs = serverMockup.map(
-      (item) => item.media?.props || "/default.jpg"
-    );
-    const descs = serverMockup.map((item) => item.narration.text);
-    const emos = serverMockup.map((item) => item.emotion);
+      const imgs = serverMockup.map(
+        (item) => item.media?.props || "/default.jpg"
+      );
+      const descs = serverMockup.map((item) => item.narration.text);
+      const emos = serverMockup.map((item) => item.emotion);
 
-    setImages(imgs);
-    setDescriptions(descs);
-    setEmotions(emos);
-  }, []);
+      setImages(imgs);
+      setDescriptions(descs);
+      setEmotions(emos);
+      setDataLoaded(true); // Marquer les données comme chargées
+
+      // Initialiser les voix
+      const initVoices = () => {
+        window.speechSynthesis.getVoices();
+      };
+
+      initVoices();
+      window.speechSynthesis.onvoiceschanged = initVoices;
+
+      return () => {
+        window.speechSynthesis.onvoiceschanged = null;
+      };
+    } catch (error) {
+      console.error("Erreur lors du décodage des données:", error);
+    }
+  }, [token]);
 
   // Effet pour jouer l'audio de fond
   useEffect(() => {
@@ -131,40 +154,74 @@ export default function Index() {
     }
   }, [duration]);
 
-  // Gérer l'audio de fond
+  // Effet pour gérer la musique de fond
   useEffect(() => {
     if (soundIsPlaying) {
       playSound();
     } else {
       stop();
     }
-  }, [soundIsPlaying]);
+  }, [soundIsPlaying, playSound, stop]);
 
-  // Gérer le changement de slide et déclencher le TTS
+  // Effet pour gérer le TTS quand indexSlide change ou quand les données sont chargées
   useEffect(() => {
-    // S'assurer que l'audio joue si le son est activé
-    if (soundIsPlaying && sound) {
-      playSound();
+    if (dataLoaded && descriptions[indexSlide]) {
+      speakText(descriptions[indexSlide]);
+    }
+  }, [indexSlide, ttsEnabled, dataLoaded, descriptions]);
+
+  // Effet pour gérer l'intervalle de changement de slide
+  useEffect(() => {
+    // Nettoyer l'intervalle précédent s'il existe
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
 
-    // Jouer le texte actuel
-    alert(descriptions[indexSlide]);
-    console.log(descriptions[indexSlide]);
-    speakText(descriptions[indexSlide]);
+    // Créer un nouvel intervalle seulement si les données sont chargées et qu'on n'est pas au dernier slide
+    if (dataLoaded && indexSlide < descriptions.length - 1) {
+      intervalRef.current = setInterval(() => {
+        setIndexSlide((prev) => prev + 1);
+      }, 4000);
+    }
 
-    const interval = setInterval(() => {
-      if (indexSlide < descriptions.length - 1) {
-        setIndexSlide(indexSlide + 1);
-      } else {
-        return () => clearInterval(interval);
+    // Nettoyer l'intervalle au démontage ou lors du changement
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
-    }, 4000);
+    };
+  }, [indexSlide, descriptions.length, dataLoaded]);
 
-    // Nettoyage quand le composant est démonté
-    return () => clearInterval(interval);
-  }, [indexSlide]);
+  // Effet pour nettoyer au démontage du composant
+  useEffect(() => {
+    return () => {
+      stopCurrentSpeech();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  // Fonction pour gérer le toggle du TTS
+  const toggleTTS = () => {
+    if (ttsEnabled) {
+      // Si on désactive le TTS, arrêter la synthèse en cours
+      stopCurrentSpeech();
+    }
+    setTtsEnabled(!ttsEnabled);
+  };
 
   const myAppRef = document.querySelector(".scrollable-div");
+
+  // Ne pas rendre le composant si les données ne sont pas encore chargées
+  if (!dataLoaded || descriptions.length === 0) {
+    return (
+      <main className="bg-gray-60 h-screen flex items-center justify-center overflow-hidden">
+        <div>Chargement...</div>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-gray-60 h-screen flex items-center justify-center overflow-hidden">
@@ -209,7 +266,7 @@ export default function Index() {
         <div className="flex-1 scrollable-div border m-2 rounded-full shadow self-end h-28 bg-white inline-block align-top p-10 items-center gap-4">
           <div className="flex text-center items-center justify-center">
             <div
-              onClick={() => setTtsEnabled(!ttsEnabled)}
+              onClick={toggleTTS}
               className="w-10 h-10 cursor-pointer flex items-center justify-center bg-white rounded-full shadow-md mr-2"
               title={ttsEnabled ? "Désactiver la voix" : "Activer la voix"}
             >
@@ -223,7 +280,7 @@ export default function Index() {
               className="flex-1 justify-center"
               startDelay={100}
               cursorColor="black"
-              text={descriptions[indexSlide]}
+              text={descriptions[indexSlide] || ""}
               key={descriptions[indexSlide]}
               typeSpeed={20}
               scrollArea={myAppRef}
@@ -239,6 +296,16 @@ export default function Index() {
           className="w-10 h-10 cursor-pointer object-contain"
         />
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogTitle></DialogTitle>
+          <img
+            alt="dfdf"
+            src="/gif/claquerporte.gif"
+            className="w-full h-auto"
+          />
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
