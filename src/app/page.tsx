@@ -8,8 +8,10 @@ import { createPageRequest } from "./endpage/services/page-service";
 import toast from "react-hot-toast";
 import { usePageActions } from "./endpage/stores/page-store";
 import { PageType } from "./endpage/types/page-type";
+import Spinner from "@/components/ui/spinner";
 
 export default function BienvenuePage() {
+  const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(0);
   const [emotion, setSelectedEmotion] = useState("");
   const [departure, setSelectedDeparture] = useState("");
@@ -90,6 +92,8 @@ export default function BienvenuePage() {
     if (step < 3) {
       setStep(step + 1);
     } else {
+      setIsLoading(true);
+
       const response = await createPageRequest(({
         emotion: emotion,
         situation: departure
@@ -100,6 +104,7 @@ export default function BienvenuePage() {
         router.push("/signup");
       } else {
         toast.error("Veuillez réessayer plus tard");
+        setIsLoading(false);
       }
     }
   };
@@ -158,146 +163,155 @@ export default function BienvenuePage() {
         <BackgroundBeams />
       </div>
 
-      {/* Section droite */}
-      <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center p-12 text-white ml-4">
-        {step === 0 && (
-          <div className="pl-[10rem]">
-            <h1 className="text-[6rem] font-bold mb-4">Bienvenue..</h1>
-            <p className="mb-6 text-lg">
-              Tu viens de terminer une étape dans ta vie ?
-            </p>
-            <p className="mb-6 text-lg">
-              Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant
-              cette période !
-            </p>
-            <p className="mb-6 text-lg">
-              Il est important d&apos;exprimer ses émotions surant de telle
-              périodes,
-            </p>
-            <p className="mb-6 text-lg">
-              Je vais t&apos;aider à passer le cap avec Classe .. ou pas..
-              alors, alons-y..
-            </p>
-            <div>
-              <button
-                onClick={handleNext}
-                className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-              >
-                Commencer
-              </button>
-            </div>
-          </div>
-        )}
-
-        {step === 1 && (
-          <>
-            <h2 className="text-2xl font-semibold mb-4">
-              Alors.. que vas-tu laisser derrière ?
-            </h2>
-
-            <div className="flex flex-col space-y-3 mb-6">
-              {departures.map((departure) => (
-                <div
-                  key={departure.id}
-                  onClick={() => handleDepartureSelect(departure.id)}
-                  className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-10"
-                >
-                  {/* <div className={`size-16 bg-primary absolute top-[calc(50%-2rem)] left-0 flex justify-center items-center rounded-lg  ${departure.otherColor}`}> */}
-                  <div className="text-5xl absolute top-[calc(50%-2rem)] left-[15px]">
-                    {departure.emoji}
-                  </div>
-                  {/* </div> */}
-                  <div
-                    className={` h-24 ml-12 p-6 pl-16 ${departure.color} bg-opacity-80  flex items-center p-4 rounded-lg shadow-md  border border-transparent w-full`}
+      {isLoading ? (
+        <div className="h-screen w-full flex items-center justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          {/* Section droite */}
+          <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center p-12 text-white ml-4">
+            {step === 0 && (
+              <div className="pl-[10rem]">
+                <h1 className="text-[6rem] font-bold mb-4">Bienvenue..</h1>
+                <p className="mb-6 text-lg">
+                  Tu viens de terminer une étape dans ta vie ?
+                </p>
+                <p className="mb-6 text-lg">
+                  Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant
+                  cette période !
+                </p>
+                <p className="mb-6 text-lg">
+                  Il est important d&apos;exprimer ses émotions surant de telle
+                  périodes,
+                </p>
+                <p className="mb-6 text-lg">
+                  Je vais t&apos;aider à passer le cap avec Classe .. ou pas..
+                  alors, alons-y..
+                </p>
+                <div>
+                  <button
+                    onClick={handleNext}
+                    className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
                   >
-                    {departure.label}
-                  </div>
+                    Commencer
+                  </button>
                 </div>
-                // <div
-                //   key={departure.id}
-                //   onClick={() => handleDepartureSelect(departure.id)}
-                //   className={`${departure.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-4 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent w-full`}
-                // >
-                //   <div className="text-3xl mr-4">{departure.emoji}</div>
-                //   <div className="font-medium">{departure.label}</div>
-                // </div>
-              ))}
-            </div>
-
-            {showOtherInput && (
-              <div className="mt-4">
-                <textarea
-                  className="mb-4 p-3 text-black border rounded w-full h-24 resize-none"
-                  placeholder="Précisez ce que vous quittez..."
-                  value={otherDepartureText}
-                  onChange={(e) => setOtherDepartureText(e.target.value)}
-                ></textarea>
-                <button
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-                >
-                  Envoyer
-                </button>
               </div>
             )}
-          </>
-        )}
 
-        {step === 2 && (
-          <>
-            <h2 className="text-2xl font-semibold mb-4">
-              Je vois.. et que ressens-tu par rapport à cela ?
-            </h2>
-            <div className="grid grid-cols-3 gap-3">
-              {emotions.map((emotion) => (
-                <div
-                  key={emotion.id}
-                  onClick={() => handleEmotionSelect(emotion.id)}
-                  className={`${emotion.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-3 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent`}
-                >
-                  <div className="text-3xl mr-3">{emotion.emoji}</div>
-                  <div className="font-medium">{emotion.label}</div>
+            {step === 1 && (
+              <>
+                <h2 className="text-2xl font-semibold mb-4">
+                  Alors.. que vas-tu laisser derrière ?
+                </h2>
+
+                <div className="flex flex-col space-y-3 mb-6">
+                  {departures.map((departure) => (
+                    <div
+                      key={departure.id}
+                      onClick={() => handleDepartureSelect(departure.id)}
+                      className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-10"
+                    >
+                      {/* <div className={`size-16 bg-primary absolute top-[calc(50%-2rem)] left-0 flex justify-center items-center rounded-lg  ${departure.otherColor}`}> */}
+                      <div className="text-5xl absolute top-[calc(50%-2rem)] left-[15px]">
+                        {departure.emoji}
+                      </div>
+                      {/* </div> */}
+                      <div
+                        className={` h-24 ml-12 p-6 pl-16 ${departure.color} bg-opacity-80  flex items-center p-4 rounded-lg shadow-md  border border-transparent w-full`}
+                      >
+                        {departure.label}
+                      </div>
+                    </div>
+                    // <div
+                    //   key={departure.id}
+                    //   onClick={() => handleDepartureSelect(departure.id)}
+                    //   className={`${departure.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-4 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent w-full`}
+                    // >
+                    //   <div className="text-3xl mr-4">{departure.emoji}</div>
+                    //   <div className="font-medium">{departure.label}</div>
+                    // </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </>
-        )}
 
-        {step === 3 && (
-          <>
-            <h2 className="text-2xl font-semibold mb-4">
-              Bien, exprimons tes émotions maintenant !
-            </h2>
-            <p className="mb-6">
-              Exprimer ce que l'on ressens est agréablement satisfaisant !
-            </p>
-            <p className="mb-6">
-              Elle sera mémorable, partageable, et un peu thérapeutique.
-            </p>
-            <p className="mb-6">Prêt à claquer la porte ?</p>
-            <div>
-              <button
-                onClick={handleNext}
-                className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-              >
-                Allons-y !
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+                {showOtherInput && (
+                  <div className="mt-4">
+                    <textarea
+                      className="mb-4 p-3 text-black border rounded w-full h-24 resize-none"
+                      placeholder="Précisez ce que vous quittez..."
+                      value={otherDepartureText}
+                      onChange={(e) => setOtherDepartureText(e.target.value)}
+                    ></textarea>
+                    <button
+                      onClick={handleNext}
+                      className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                    >
+                      Envoyer
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
 
-      {/* Section gauche */}
-      <div className="relative z-10 w-1/2 flex items-center justify-center">
-        <Image
-          src={images[step]}
-          alt="Assistant"
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-auto object-contain"
-        />
-      </div>
+            {step === 2 && (
+              <>
+                <h2 className="text-2xl font-semibold mb-4">
+                  Je vois.. et que ressens-tu par rapport à cela ?
+                </h2>
+                <div className="grid grid-cols-3 gap-3">
+                  {emotions.map((emotion) => (
+                    <div
+                      key={emotion.id}
+                      onClick={() => handleEmotionSelect(emotion.id)}
+                      className={`${emotion.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-3 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent`}
+                    >
+                      <div className="text-3xl mr-3">{emotion.emoji}</div>
+                      <div className="font-medium">{emotion.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {step === 3 && (
+              <>
+                <h2 className="text-2xl font-semibold mb-4">
+                  Bien, exprimons tes émotions maintenant !
+                </h2>
+                <p className="mb-6">
+                  Exprimer ce que l'on ressens est agréablement satisfaisant !
+                </p>
+                <p className="mb-6">
+                  Elle sera mémorable, partageable, et un peu thérapeutique.
+                </p>
+                <p className="mb-6">Prêt à claquer la porte ?</p>
+                <div>
+                  <button
+                    onClick={handleNext}
+                    className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                  >
+                    Allons-y !
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Section gauche */}
+          <div className="relative z-10 w-1/2 flex items-center justify-center">
+            <Image
+              src={images[step]}
+              alt="Assistant"
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="w-full h-auto object-contain"
+            />
+          </div>
+        </>
+      )}
+
     </main>
   );
 }
