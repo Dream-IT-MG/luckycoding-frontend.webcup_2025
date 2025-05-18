@@ -23,8 +23,10 @@ deploy:stable:
     - chmod 644 $PRODUCTION_DIR/.ssh/known_hosts
   script:
     - ssh -p 22974 -o StrictHostKeyChecking=no $PRODUCTION_USER@$IP_ADDRESS << 'END'
+    - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     - source ~/.bashrc
-    - source /home/luckycoding/nodevenv/luckycoding-frontend/22/bin/activate
+    - nvm install 22
+    - nvm use 22
     - cd /home/luckycoding/luckycoding-frontend
     - git checkout main
     - git fetch
@@ -47,7 +49,10 @@ build:stable:
     - chmod 644 $PRODUCTION_DIR/.ssh/known_hosts
   script:
     - ssh -p 22974 -o StrictHostKeyChecking=no $PRODUCTION_USER@$IP_ADDRESS << 'END'
-    - source /home/luckycoding/nodevenv/luckycoding-frontend/22/bin/activate
+    - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    - source ~/.bashrc
+    - nvm install 22
+    - nvm use 22
     - cd /home/luckycoding/luckycoding-frontend
     - npm run build
     - END
