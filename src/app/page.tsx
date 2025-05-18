@@ -200,14 +200,24 @@ export default function BienvenuePage() {
 
         {step === 3 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Prêt à claquer la porte ?</h2>
-            <p className="mb-6">Votre page de départ est presque prête. Elle sera mémorable, partageable, et un peu thérapeutique.</p>
-            <button
-              onClick={handleNext}
-              className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-            >
-              J&rsquo;y vais
-            </button>
+            <h2 className="text-2xl font-semibold mb-4">Bien, exprimons tes émotions maintenant !</h2>
+            <p className="mb-6">Exprimer ce que l'on ressens est agréablement satisfaisant !
+              </p>
+              <p className="mb-6">
+              Elle sera mémorable, partageable, et un peu thérapeutique.
+              </p>
+              <p className="mb-6">
+              Prêt à claquer la porte ?
+              </p>
+              <div>
+                <button
+                  onClick={handleNext}
+                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                >
+                  Allons-y !
+                </button>
+
+              </div>
           </>
         )}
       </div>
