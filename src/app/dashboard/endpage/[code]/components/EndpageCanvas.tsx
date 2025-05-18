@@ -111,7 +111,6 @@ export default function EndpageCanvas() {
   return (
     <>
       <div className="rounded-[--radius] h-screen w-full flex flex-col justify-center items-center">
-        <pre>{JSON.stringify(pageSections)}</pre>
         <Sheet>
           <SheetTrigger asChild>
             <div className="flex justify-center items-center">
@@ -128,8 +127,13 @@ export default function EndpageCanvas() {
               </SheetDescription>
 
               {Object.entries(emojiForEmotions).map(([key, emoji]) => (
-                <div key={key} onClick={() => changeCurrentSectionEmotion(key)}>
-                  {emoji} - {key}
+                <div
+                  key={key}
+                  onClick={() => changeCurrentSectionEmotion(key)}
+                  className="h-12 hover:cursor-pointer hover:bg-gray-100 p-5 flex items-center rounded-[--radius] pt-5"
+                >
+                  <span className="text-5xl">{emoji}</span>
+                  <span className="capitalize ml-5">{key}</span>
                 </div>
               ))}
             </SheetHeader>
@@ -296,7 +300,7 @@ export default function EndpageCanvas() {
                     32
                       ? "..."
                       : "")
-                  : "Click to add naration"}
+                  : "Add Naration"}
               </Button>
             </SheetTrigger>
             <SheetContent

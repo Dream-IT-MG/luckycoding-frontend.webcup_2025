@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const narrationFormSchema = z.object({
-  narration: z.string().min(2).max(50),
+  narration: z.string().min(2),
   voice_tone: z.string(),
 });
 
