@@ -135,10 +135,10 @@ export default function EndpageCanvas() {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-        <div className="mt-10 w-full justify-center flex">
+        <div className="mt-10 w-full justify-evenly flex-col flex">
           <Sheet>
             <SheetTrigger asChild>
-              <div className="relative h-56 lg:h-[60vh] w-11/12 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300">
+              <div className="ml-5 relative mb-3 h-40 mr-0 lg:ml-[15rem] lg:h-[30vh] w-1/3 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300">
                 {pageSections[currentSection].media?.type === "image" ? (
                   <>
                     <img
@@ -151,7 +151,7 @@ export default function EndpageCanvas() {
                   </>
                 ) : (
                   <>
-                    <ImageIcon className="size-16 z-10" />
+                    <ImageIcon className="size-12 z-10" />
                     <div className="text-xs mt-2 z-10">
                       Click to add new media
                     </div>
@@ -159,6 +159,32 @@ export default function EndpageCanvas() {
                 )}
               </div>
             </SheetTrigger>
+            <div>
+
+            </div>
+              <SheetTrigger asChild>
+              <div className="relative h-40 ml-0 lg:ml-[40rem] lg:h-[30vh] w-1/3 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300">
+                {pageSections[currentSection].media?.type === "image" ? (
+                  <>
+                    <img
+                      src={pageSections[currentSection].media?.props as string}
+                      alt="Image preview"
+                      className="absolute inset-0 object-cover w-full h-full scale-100 group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors duration-300" />
+                    <Pencil className="absolute top-2 right-2 text-white opacity-90 group-hover:opacity-100" />
+                  </>
+                ) : (
+                  <>
+                    <Pencil className="size-12 z-10" />
+                    <div className="text-xs mt-2 z-10">
+                      Click to add Drawing
+                    </div>
+                  </>
+                )}
+              </div>
+            </SheetTrigger>
+            <div className="w-1/3"></div>
 
             <SheetContent className="overflow-y-scroll" side={"left"}>
               <SheetHeader>

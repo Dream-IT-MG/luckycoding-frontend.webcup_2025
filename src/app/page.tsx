@@ -46,7 +46,7 @@ export default function BienvenuePage() {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      router.push("/home");
+      router.push("/dashboard");
     }
   };
 

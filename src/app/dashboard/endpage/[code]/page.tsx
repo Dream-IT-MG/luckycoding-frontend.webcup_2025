@@ -11,10 +11,17 @@ export default async function App({
   console.log(code);
 
   return (
-    <div className="relative flex justify-center items-center">
-      <Navbar />
+    <main className="tracking-gradient relative flex align-center justify-center min-h-screen overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(to right top, #1a345c, #252d51, #292746, #2a223b, #291d31)",
+      }}>
+        <div className="relative flex justify-center items-center w-[70vw] min-h-[90vh] bg-white shadow-md rounded-lg">
+          <Navbar />
 
-      <EndpageCanvas />
-    </div>
+          <EndpageCanvas />
+        </div>
+
+    </main>
   );
 }

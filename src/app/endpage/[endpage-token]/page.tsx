@@ -30,9 +30,6 @@ export default function Index() {
   };
 
   useEffect(() => {
-    // serverMockup.push(
-    //   { "emotion": "soulage", "narration": { "voicetone": "", "text": "The EndPage." }, "media": { "type": "image", "props": "/gif/claquerporte.gif" } }
-    // )
     const imgs = serverMockup.map((item) => item.media.props);
     const descs = serverMockup.map((item) => item.narration.text);
     const emos = serverMockup.map((item) => item.emotion);
