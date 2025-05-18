@@ -93,7 +93,7 @@ export default function BienvenuePage() {
 
   return (
     <main
-      className="tracking-gradient relative flex min-h-screen overflow-hidden"
+      className="tracking-gradient relative flex flex-col lg:flex-row min-h-screen overflow-hidden"
       style={{
         backgroundImage:
           "linear-gradient(to right top, #1a345c, #252d51, #292746, #2a223b, #291d31)",
@@ -104,28 +104,28 @@ export default function BienvenuePage() {
         <BackgroundBeams />
       </div>
 
-      {/* Section droite */}
-      <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center p-12 text-white ml-4">
+      {/* Section droite (sur desktop) - passe en haut sur mobile */}
+      <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center p-4 sm:p-8 lg:p-12 text-white order-2 lg:order-1">
         {step === 0 && (
-          <div className="pl-[10rem]">
-            <h1 className="text-[6rem] font-bold mb-4">Bienvenue..</h1>
-            <p className="mb-6 text-lg">
+          <div className="pl-0 sm:pl-4 lg:pl-10">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">Bienvenue..</h1>
+            <p className="mb-4 text-base lg:text-lg">
               Tu viens de terminer une étape dans ta vie ?
             </p>
-            <p className="mb-6 text-lg">
+            <p className="mb-4 text-base lg:text-lg">
               Ne t'inquiète pas, je suis là pour t'accompager durant cette période !
-              </p>
-              <p className="mb-6 text-lg">
-              Il est important d'exprimer ses émotions surant de telle périodes,
-              </p>
-              <p className="mb-6 text-lg">
+            </p>
+            <p className="mb-4 text-base lg:text-lg">
+              Il est important d'exprimer ses émotions durant de telles périodes,
+            </p>
+            <p className="mb-6 text-base lg:text-lg">
               Je vais t'aider à passer le cap avec Classe .. ou pas.. 
-              alors, alons-y..
+              alors, allons-y..
             </p>
             <div>
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 w-full sm:w-auto"
               >
                 Commencer
               </button>
@@ -135,29 +135,24 @@ export default function BienvenuePage() {
 
         {step === 1 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Alors.. que vas-tu laisser derrière ?</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Alors.. que vas-tu laisser derrière ?</h2>
             
             <div className="flex flex-col space-y-3 mb-6">
               {departures.map((departure) => (
                 <div
                   key={departure.id}
                   onClick={() => handleDepartureSelect(departure.id)}
-                 className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-10">
-                  {/* <div className={`size-16 bg-primary absolute top-[calc(50%-2rem)] left-0 flex justify-center items-center rounded-lg  ${departure.otherColor}`}> */}
-                      <div className="text-5xl absolute top-[calc(50%-2rem)] left-[15px]">{departure.emoji}</div>
-                  {/* </div> */}
+                  className="w-full relative cursor-pointer transition-all duration-200 hover:scale-105 hover:bg-opacity-100 mr-0 sm:mr-10"
+                >
+                  <div className="text-4xl sm:text-5xl absolute top-[calc(50%-1.5rem)] sm:top-[calc(50%-2rem)] left-[8px] sm:left-[15px]">
+                    {departure.emoji}
+                  </div>
                   <div
-                      className={` h-24 ml-12 p-6 pl-16 ${departure.color} bg-opacity-80  flex items-center p-4 rounded-lg shadow-md  border border-transparent w-full`}>
-                      {departure.label}</div>
-              </div>
-                // <div
-                //   key={departure.id}
-                //   onClick={() => handleDepartureSelect(departure.id)}
-                //   className={`${departure.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-4 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent w-full`}
-                // >
-                //   <div className="text-3xl mr-4">{departure.emoji}</div>
-                //   <div className="font-medium">{departure.label}</div>
-                // </div>
+                    className={`h-16 sm:h-20 lg:h-24 ml-10 sm:ml-12 p-2 sm:p-4 pl-10 sm:pl-16 ${departure.color} bg-opacity-80 flex items-center rounded-lg shadow-md border border-transparent w-full text-sm sm:text-base`}
+                  >
+                    {departure.label}
+                  </div>
+                </div>
               ))}
             </div>
 
@@ -171,7 +166,7 @@ export default function BienvenuePage() {
                 ></textarea>
                 <button
                   onClick={handleNext}
-                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 w-full sm:w-auto"
                 >
                   Envoyer
                 </button>
@@ -182,16 +177,16 @@ export default function BienvenuePage() {
 
         {step === 2 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Je vois.. et que ressens-tu par rapport à cela ?</h2>
-            <div className="grid grid-cols-3 gap-3">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Je vois.. et que ressens-tu par rapport à cela ?</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
               {emotions.map((emotion) => (
                 <div
                   key={emotion.id}
                   onClick={() => handleEmotionSelect(emotion.id)}
-                  className={`${emotion.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-3 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent`}
+                  className={`${emotion.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-2 sm:p-3 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent`}
                 >
-                  <div className="text-3xl mr-3">{emotion.emoji}</div>
-                  <div className="font-medium">{emotion.label}</div>
+                  <div className="text-xl sm:text-2xl lg:text-3xl mr-2 sm:mr-3">{emotion.emoji}</div>
+                  <div className="font-medium text-sm sm:text-base">{emotion.label}</div>
                 </div>
               ))}
             </div>
@@ -200,37 +195,38 @@ export default function BienvenuePage() {
 
         {step === 3 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Bien, exprimons tes émotions maintenant !</h2>
-            <p className="mb-6">Exprimer ce que l'on ressens est agréablement satisfaisant !
-              </p>
-              <p className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Bien, exprimons tes émotions maintenant !</h2>
+            <p className="mb-3 sm:mb-6 text-base">
+              Exprimer ce que l'on ressent est agréablement satisfaisant !
+            </p>
+            <p className="mb-3 sm:mb-6 text-base">
               Elle sera mémorable, partageable, et un peu thérapeutique.
-              </p>
-              <p className="mb-6">
+            </p>
+            <p className="mb-4 sm:mb-6 text-base">
               Prêt à claquer la porte ?
-              </p>
-              <div>
-                <button
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
-                >
-                  Allons-y !
-                </button>
-
-              </div>
+            </p>
+            <div>
+              <button
+                onClick={handleNext}
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 w-full sm:w-auto"
+              >
+                Allons-y !
+              </button>
+            </div>
           </>
         )}
       </div>
 
-      {/* Section gauche */}
-      <div className="relative z-10 w-1/2 flex items-center justify-center">
+      {/* Section gauche (sur desktop) - passe en bas sur mobile */}
+      <div className="relative z-10 w-full lg:w-1/2 flex items-center justify-center p-4 h-64 sm:h-80 lg:h-auto order-1 lg:order-2">
         <Image
           src={images[step]}
           alt="Assistant"
           width={0}
           height={0}
           sizes="100vw"
-          className="w-full h-auto object-contain"
+          className="w-auto h-full lg:h-auto lg:w-full object-contain"
+          priority
         />
       </div>
 
