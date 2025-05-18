@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState, useRef} from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
 import useSound from "use-sound";
 import Image from "next/image";
 import soundoff from "./icons/soundoff.png";
@@ -9,30 +8,35 @@ import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
 import { emojiForEmotions } from "@/utils/emotions";
-import { decodeJSONFromURLParam } from "@/app/lib/json-url";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-type MediaItem = {
-  emotion: string;
-  narration: {
-    voicetone: string;
-    text: string;
-  };
-  media: {
-    type: string;
-    props: string;
-  };
-};
+const serverMockup = [
+  {
+    "emotion": "colere",
+    "narration": {"voicetone": "", "text": "Bonjour, Je m'appelle K"},
+    "media": {"type": "image", "props": "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg"}
+  },
+  {
+    "emotion": "triste",
+    "narration": {"voicetone": "", "text": "Ca faisait longtemps que je n'avais plus e"},
+    "media": {"type": "image", "props": "https://cdn.futura-sciences.com/sources/images/demission_1.jpg"}
+  },
+  {
+    "emotion": "soulage",
+    "narration": {"voicetone": "", "text": "Il y avait ce soit disant 'manager' qui "},
+    "media": {"type": "image", "props": "https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg"}
+  }
+];
 
 export default function Index() {
-  const params = useParams();
-  const token = params["endpage-token"];
-
   const [soundIsPlaying, setSoundIsPlaying] = useState(false);
   const [indexSlide, setIndexSlide] = useState(0);
   const [playSound, { sound, stop, duration }] = useSound("/sakura.mp3");
   const [ttsEnabled, setTtsEnabled] = useState(true);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [open, setOpen] = useState(false); // Déplacé à l'intérieur du composant
   const speechSynthRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const playBackgroundSound = () => {
     sound?.volume(0.4);
@@ -40,16 +44,46 @@ export default function Index() {
     setSoundIsPlaying(true);
   };
 
-  // Fonction simplifiée pour jouer le texte avec TTS
-  const speakText = (text: string) => {
-    // Arrêter toute synthèse vocale en cours
+  const images = [
+    "https://www.cadreaverti-saintsernin.fr/public/Thumbs/Medias/demission-motivee-indemnites_w900_h350_fitfill_1712043393.jpg",
+    "https://cdn.futura-sciences.com/sources/images/demission_1.jpg",
+    "https://www.cabinet-zenou.fr/images/blog/128_la-demission-du-salarie-comment-faire.jpg",
+    "https://clockit.io/wp-content/uploads/2023/06/resignation-email-templates.jpg",
+    "https://www.challenges.fr/_ipx/f_webp&enlarge_true&fit_cover&s_680x420/cha/static/2025-02/27716.HR.png%3FVersionId=4r4BEUxPvYvcgJWZNnNrL_V21hqQ44vf",
+  ];
+
+  const emotions = [
+    "colere",
+    "triste",
+    "soulage",
+    "nostalgique",
+    "joyeux",
+  ];
+
+  const descriptions = [
+    "Bonjour, Je m'appelle Khanie et j'ai quitté mon travail !",
+    "ça faisait longtemps que je n'avais plus envie de travailler..",
+    "Il y avait ce soit disant 'manager' qui ne foutait rien sauf faire chier!",
+    "Aujourd'hui, qu'ils aillent se faire foutre!",
+    "Je pars et vous restez !!",
+  ];
+
+  // Fonction pour arrêter la synthèse vocale en cours
+  const stopCurrentSpeech = () => {
     if (speechSynthRef.current) {
       window.speechSynthesis.cancel();
+      speechSynthRef.current = null;
+      setIsSpeaking(false);
     }
-    
+  };
+
+  // Fonction simplifiée pour jouer le texte avec TTS
+  const speakText = (text: string) => {
     if (!ttsEnabled) return;
     
-    // Créer une nouvelle instance de SpeechSynthesisUtterance
+    // Arrêter la synthèse vocale précédente
+    stopCurrentSpeech();
+    
     const utterance = new SpeechSynthesisUtterance(text);
     
     // Essayer de trouver une voix française
@@ -59,7 +93,6 @@ export default function Index() {
       utterance.voice = frenchVoice;
     }
     
-    // Événements pour suivre l'état de la synthèse vocale
     utterance.onstart = () => {
       setIsSpeaking(true);
     };
@@ -74,51 +107,44 @@ export default function Index() {
       speechSynthRef.current = null;
     };
     
-    // Stocker la référence à l'utterance actuelle
     speechSynthRef.current = utterance;
-    
-    // Jouer la synthèse vocale
     window.speechSynthesis.speak(utterance);
   };
 
-  // Initialiser les voix au chargement du composant
+  // Effet pour fermer la dialog après 2s
   useEffect(() => {
-    // Fonction pour initialiser les voix
+    if (open) {
+      const timer = setTimeout(() => {
+        setOpen(false); // Close after 2s
+      }, 2000);
+
+      return () => clearTimeout(timer); // Cleanup
+    }
+  }, [open]);
+
+  // Effet pour ouvrir la dialog au dernier slide
+  useEffect(() => {
+    if (indexSlide === descriptions.length - 1) {
+      const timer = setTimeout(() => {
+        setOpen(true);
+      }, 4000);
+
+      return () => clearTimeout(timer); 
+    }
+  }, [indexSlide, descriptions.length]);
+
+  // Effet pour initialiser les voix
+  useEffect(() => {
     const initVoices = () => {
       window.speechSynthesis.getVoices();
     };
     
-    // Appeler initVoices une fois pour déclencher le chargement des voix
     initVoices();
-    
-    // Écouter l'événement voiceschanged
     window.speechSynthesis.onvoiceschanged = initVoices;
     
-    // Nettoyage
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
-      if (speechSynthRef.current) {
-        window.speechSynthesis.cancel();
-      }
     };
-  }
-
-  useEffect(() => {
-    if (!token || typeof token !== "string") return;
-
-    alert(decodeJSONFromURLParam(token));
-    console.log(decodeJSONFromURLParam(token));
-    const serverMockup = decodeJSONFromURLParam(token) as MediaItem[];
-
-    const imgs = serverMockup.map(
-      (item) => item.media?.props || "/default.jpg"
-    );
-    const descs = serverMockup.map((item) => item.narration.text);
-    const emos = serverMockup.map((item) => item.emotion);
-
-    setImages(imgs);
-    setDescriptions(descs);
-    setEmotions(emos);
   }, []);
 
   // Effet pour jouer l'audio de fond
@@ -128,36 +154,61 @@ export default function Index() {
     }
   }, [duration]);
 
-  // Gérer l'audio de fond
+  // Effet pour gérer la musique de fond
   useEffect(() => {
     if (soundIsPlaying) {
       playSound();
     } else {
       stop();
     }
-  }, [soundIsPlaying]);
+  }, [soundIsPlaying, playSound, stop]);
 
-  // Gérer le changement de slide et déclencher le TTS
+  // Effet séparé pour gérer le TTS quand indexSlide change
   useEffect(() => {
-    // S'assurer que l'audio joue si le son est activé
-    if (soundIsPlaying && sound) {
-      playSound();
-    }
-    
-    // Jouer le texte actuel
     speakText(descriptions[indexSlide]);
-    
-    const interval = setInterval(() => {
-      if (indexSlide < descriptions.length - 1) {
-        setIndexSlide(indexSlide + 1);
-      } else {
-        return () => clearInterval(interval);
-      }
-    }, 4000);
+  }, [indexSlide, ttsEnabled]);
 
-    // Nettoyage quand le composant est démonté
-    return () => clearInterval(interval);
-  }, [indexSlide]);
+  // Effet séparé pour gérer l'intervalle de changement de slide
+  useEffect(() => {
+    // Nettoyer l'intervalle précédent s'il existe
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    // Créer un nouvel intervalle seulement si on n'est pas au dernier slide
+    if (indexSlide < descriptions.length - 1) {
+      intervalRef.current = setInterval(() => {
+        setIndexSlide(prev => prev + 1);
+      }, 4000);
+    }
+
+    // Nettoyer l'intervalle au démontage ou lors du changement
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [indexSlide, descriptions.length]);
+
+  // Effet pour nettoyer au démontage du composant
+  useEffect(() => {
+    return () => {
+      stopCurrentSpeech();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  // Fonction pour gérer le toggle du TTS
+  const toggleTTS = () => {
+    if (ttsEnabled) {
+      // Si on désactive le TTS, arrêter la synthèse en cours
+      stopCurrentSpeech();
+    }
+    setTtsEnabled(!ttsEnabled);
+  };
 
   const myAppRef = document.querySelector(".scrollable-div");
 
@@ -204,7 +255,7 @@ export default function Index() {
         <div className="flex-1 scrollable-div border m-2 rounded-full shadow self-end h-28 bg-white inline-block align-top p-10 items-center gap-4">
           <div className="flex text-center items-center justify-center">
             <div 
-              onClick={() => setTtsEnabled(!ttsEnabled)} 
+              onClick={toggleTTS} 
               className="w-10 h-10 cursor-pointer flex items-center justify-center bg-white rounded-full shadow-md mr-2"
               title={ttsEnabled ? "Désactiver la voix" : "Activer la voix"}
             >
@@ -234,6 +285,16 @@ export default function Index() {
           className="w-10 h-10 cursor-pointer object-contain"
         />
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogTitle></DialogTitle>
+          <img
+            alt="dfdf"
+            src="/gif/claquerporte.gif"
+            className="w-full h-auto"
+          />
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
