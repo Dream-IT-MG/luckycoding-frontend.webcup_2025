@@ -19,7 +19,7 @@ export default async function handler(
     keepExtensions: true,
   });
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, (err: unknown) => {
     if (err) {
       console.error(err);
       res.status(500).send("Upload error");

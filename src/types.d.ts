@@ -1,4 +1,5 @@
 declare module "react-typewriter-effect";
+declare module "formidable";
 
 declare namespace JSX {
   interface IntrinsicElements {
