@@ -172,18 +172,19 @@ export default function AssistancePage() {
 
         {/* Nouvelle section Hall of Fame */}
         <div className="mt-4 lg:mt-6 text-center px-4 sm:px-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-            Hall of Fame
+          <h2 className="text-2xl lg:text-5xl font-bold text-white mb-2">
+            Ville des fins
           </h2>
-          <p className="text-gray-300 text-sm sm:text-base mb-3">
-            Découvrez les pages d'adieu les plus inspirantes créées par notre
-            communauté.
+          <p className="text-gray-300 text-sm sm:text-base mb-3 lg:px-5">
+            Dans la ville des fins, explorer les rues pour revoir les portes
+            fermés des gens, et explorer la "Hall of Fame" pour les fins les
+            plus épiques !
           </p>
           <Link
             href="/portal"
             className="inline-block px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors text-sm sm:text-base"
           >
-            Explorer
+            Explorer la ville des fins
           </Link>
         </div>
       </div>
@@ -264,4 +265,3 @@ export default function AssistancePage() {
     </main>
   );
 }
-;
