@@ -155,6 +155,136 @@ export default function EndpageCanvas({
 
   return (
     <>
+      <div className="hidden lg:flex flex-col gap-5 w-[300px] p-5">
+        <div className="flex flex-col gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <div className="hover:bg-gray-400 hover:cursor-pointer bg-gray-300 h-28 w-full rounded-[--radius] text-xl flex justify-center items-center text-slate-700">
+                Image
+              </div>
+            </SheetTrigger>
+            <SheetContent side="bottom">
+              <SheetHeader>
+                <SheetTitle>Add Image</SheetTitle>
+                <SheetDescription>Enter the image URL</SheetDescription>
+                <ImageMediaInput
+                  value={
+                    pageSections[currentSection].media?.type === "image"
+                      ? (pageSections[currentSection].media?.props as string)
+                      : ""
+                  }
+                  onSubmit={(url: string) => {
+                    setPageSections((prev) =>
+                      prev.map((section, idx) =>
+                        idx === currentSection
+                          ? {
+                              ...section,
+                              media: {
+                                type: "image",
+                                props: url,
+                              },
+                            }
+                          : section
+                      )
+                    );
+                  }}
+                />
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <div className="hover:bg-gray-400 hover:cursor-pointer bg-gray-300 h-28 w-full rounded-[--radius] text-xl flex justify-center items-center text-slate-700">
+                Video
+              </div>
+            </SheetTrigger>
+            <SheetContent side="bottom">
+              <SheetHeader>
+                <SheetTitle>Add Video</SheetTitle>
+                <SheetDescription>Enter the video URL</SheetDescription>
+                <VideoMediaInput
+                  value={
+                    pageSections[currentSection].media?.type === "video"
+                      ? (
+                          pageSections[currentSection].media?.props as {
+                            src: string;
+                          }
+                        )?.src ?? ""
+                      : ""
+                  }
+                  onSubmit={(src: string) => {
+                    setPageSections((prev) =>
+                      prev.map((section, idx) =>
+                        idx === currentSection
+                          ? {
+                              ...section,
+                              media: {
+                                type: "video",
+                                props: { src },
+                              },
+                            }
+                          : section
+                      )
+                    );
+                  }}
+                />
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Dialog
+            open={isDrawingDialogOpen}
+            onOpenChange={setIsDrawingDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <div className="hover:bg-gray-400 hover:cursor-pointer bg-gray-300 h-28 w-full rounded-[--radius] text-xl flex justify-center items-center text-slate-700">
+                Drawing
+              </div>
+            </DialogTrigger>
+            <DialogContent className="max-w-fit">
+              <DialogHeader>
+                <DialogTitle className="text-center">
+                  Create or import your drawing 🎨
+                </DialogTitle>
+                <DialogDescription className="hidden" />
+                <div className="flex justify-center items-center gap-10 pt-5">
+                  <Link
+                    href="/dessin"
+                    target="_blank"
+                    className="relative size-56 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300"
+                  >
+                    <Palette className="size-12 z-10" />
+                    <div className="text-xs mt-2 z-10">
+                      Click to create a new drawing
+                    </div>
+                  </Link>
+                  <div className="text-slate-700">or</div>
+                  <div
+                    className="relative size-56 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300"
+                    onClick={() => inputRef.current?.click()}
+                  >
+                    <input
+                      type="file"
+                      ref={inputRef}
+                      onChange={handleChange}
+                      className="hidden"
+                    />
+
+                    <Import className="size-12 z-10" />
+                    <div className="text-xs mt-2 z-10">
+                      Click to import an existing drawing
+                    </div>
+                  </div>
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
       <div className="rounded-[--radius] h-screen w-full flex flex-col justify-center items-center">
         <Sheet>
           <SheetTrigger asChild>
@@ -355,7 +485,7 @@ export default function EndpageCanvas({
           </Sheet>
         </div>
       </div>
-      <div className="absolute right-0 top-1/2">
+      <div className="absolute right-0 top-1/2 lg:hidden">
         <Sheet>
           <SheetTrigger>
             <div className="bg-background h-24 w-12 flex justify-center items-center text-slate-700 rounded-l-[--radius]">
@@ -364,7 +494,10 @@ export default function EndpageCanvas({
           </SheetTrigger>
           <SheetContent className="overflow-y-scroll">
             <SheetHeader>
-              <SheetTitle>Section management</SheetTitle>
+              <SheetTitle className="flex gap-2 items-center">
+                <Layers />
+                Section management
+              </SheetTitle>
               <SheetDescription>Create or delete section</SheetDescription>
               <SectionManagement
                 pageSections={pageSections}
@@ -428,6 +561,16 @@ export default function EndpageCanvas({
             </SheetContent>
           </Sheet>
         </div>
+      </div>
+
+      <div className="hidden lg:block w-[300px] p-5">
+        <SectionManagement
+          pageSections={pageSections}
+          currentSection={currentSection}
+          setCurrentSection={setCurrentSection}
+          onSectionDeleteByIndex={onSectionDeleteByIndex}
+          onSectionPlusClick={onSectionPlusClick}
+        />
       </div>
     </>
   );
