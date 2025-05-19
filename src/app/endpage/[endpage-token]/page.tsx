@@ -6,7 +6,6 @@ import Image from "next/image";
 import soundoff from "./icons/soundoff.png";
 import soundon from "./icons/soundon.png";
 import { CardContainer, CardItem } from "@/components/ui/3d-card";
-import blob from "./assets/bitmap2.svg";
 import TypeWriterEffect from "react-typewriter-effect";
 import { emojiForEmotions } from "@/utils/emotions";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -239,14 +238,18 @@ export default function Index() {
         </CardContainer>
       </div>
       <Image
-        src={blob}
+        src={`/blob/${emotions[indexSlide]}.png`}
         alt="blob"
         className="absolute bottom-0 right-0 h-[50%] w-auto"
+        width={200}
+        height={200}
       />
       <Image
-        src={blob}
+        src={`/blob/${emotions[indexSlide]}.png`}
         alt="blob"
         className="absolute top-0 left-0 h-[50%] w-auto rotate-[180deg]"
+        width={200}
+        height={200}
       />
       <div className="absolute top-20 right-[15rem] text-6xl rotate-[20deg]">
         {emojiForEmotions[emotions[indexSlide]]}
