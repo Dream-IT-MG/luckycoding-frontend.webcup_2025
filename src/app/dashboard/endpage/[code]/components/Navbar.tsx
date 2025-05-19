@@ -18,6 +18,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { encodeJSONToURLParam } from "@/app/lib/json-url";
 import { PageSection } from "../page";
+import Link from "next/link";
 
 export default function Navbar({
   pageSections,
@@ -87,8 +88,8 @@ export default function Navbar({
             </div>
             <DialogFooter className="sm:justify-start">
               <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Close
+                <Button type="button" variant="secondary" asChild>
+                  <Link href={"/assistance"}>Finir l'édition</Link>
                 </Button>
               </DialogClose>
             </DialogFooter>

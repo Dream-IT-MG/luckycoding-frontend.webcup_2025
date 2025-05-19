@@ -144,31 +144,32 @@ export default function BienvenuePage() {
       </div>
 
       {/* Section droite */}
-      <div className="relative z-10 w-full lg:w-1/2 flex flex-col justify-center p-12 text-white ml-4">
+      <div className="relative z-10 w-full lg:w-2/3 flex flex-col justify-center p-12 text-white ml-4">
         {step === 0 && (
           <div className="pl-[10rem]">
-            <h1 className="text-[6rem] font-bold mb-4">Bienvenue..</h1>
-            <p className="mb-6 text-lg">
-              Tu viens de terminer une étape dans ta vie ?
-            </p>
-            <p className="mb-6 text-lg">
-              Ne t&apos;inquiète pas, je suis là pour t&apos;accompager durant
-              cette période !
-            </p>
-            <p className="mb-6 text-lg">
-              Il est important d&apos;exprimer ses émotions surant de telle
-              périodes,
-            </p>
-            <p className="mb-6 text-lg">
-              Je vais t&apos;aider à passer le cap avec Classe .. ou pas..
-              alors, alons-y..
+            <h1 className="text-7xl font-bold mb-10">
+              Quitte avec classe (ou panache) à travers
+              <span className="p-2 inline-block mt-2">TheEnd.page!</span>
+            </h1>
+            <p className="mb-10 text-lg">
+              <span className="block">
+                Tu viens de terminer une étape dans ta vie ? Ne t&apos;inquiète
+                pas,
+              </span>
+              <span className="block">
+                Je suis là pour t&apos;accompager durant cette période !
+              </span>
+              <span className="block">
+                Je vais t&apos;aider à passer le cap avec Classe
+              </span>
+              <span className="block">... ou pas. Alors, alons-y !</span>
             </p>
             <div>
               <button
                 onClick={handleNext}
                 className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
               >
-                Commencer
+                Commencer à rediger mon Endpage
               </button>
             </div>
           </div>
@@ -176,11 +177,11 @@ export default function BienvenuePage() {
 
         {step === 1 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-5xl font-semibold mb-10 text-center">
               Alors.. que vas-tu laisser derrière ?
             </h2>
 
-            <div className="flex flex-col space-y-3 mb-6">
+            <div className="grid grid-cols-2 gap-x-10 gap-y-5 mb-6">
               {departures.map((departure) => (
                 <div
                   key={departure.id}
@@ -198,14 +199,6 @@ export default function BienvenuePage() {
                     {departure.label}
                   </div>
                 </div>
-                // <div
-                //   key={departure.id}
-                //   onClick={() => handleDepartureSelect(departure.id)}
-                //   className={`${departure.color} bg-opacity-80 hover:bg-opacity-100 flex items-center p-4 rounded-lg shadow-md cursor-pointer transition-all duration-200 hover:scale-105 border border-transparent w-full`}
-                // >
-                //   <div className="text-3xl mr-4">{departure.emoji}</div>
-                //   <div className="font-medium">{departure.label}</div>
-                // </div>
               ))}
             </div>
 
@@ -221,7 +214,7 @@ export default function BienvenuePage() {
                   onClick={handleNext}
                   className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
                 >
-                  Envoyer
+                  Envoyer ma réponse
                 </button>
               </div>
             )}
@@ -230,7 +223,7 @@ export default function BienvenuePage() {
 
         {step === 2 && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-5xl font-semibold mb-10 text-center">
               Je vois.. et que ressens-tu par rapport à cela ?
             </h2>
             <div className="grid grid-cols-3 gap-3">
@@ -249,31 +242,33 @@ export default function BienvenuePage() {
         )}
 
         {step === 3 && (
-          <>
-            <h2 className="text-2xl font-semibold mb-4">
+          <div className="pl-[10rem]">
+            <h2 className="text-7xl font-bold mb-10">
               Bien, exprimons tes émotions maintenant !
             </h2>
-            <p className="mb-6">
-              Exprimer ce que l'on ressens est agréablement satisfaisant !
+            <p className="mb-10 text-lg">
+              <span className="block">
+                Exprimer ce que l'on ressens est agréablement satisfaisant !
+              </span>
+              <span className="block">
+                Elle sera mémorable, partageable, et un peu thérapeutique.
+              </span>
+              <span className="block">Prêt à claquer la porte ?</span>
             </p>
-            <p className="mb-6">
-              Elle sera mémorable, partageable, et un peu thérapeutique.
-            </p>
-            <p className="mb-6">Prêt à claquer la porte ?</p>
             <div>
               <button
                 onClick={handleNext}
                 className="px-6 py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700"
               >
-                Allons-y !
+                Oui, claquer la porte 🚪
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
 
       {/* Section gauche */}
-      <div className="relative z-10 w-1/2 flex items-center justify-center">
+      <div className="relative z-10 w-1/3 flex items-center justify-center">
         <Image
           src={images[step]}
           alt="Assistant"
