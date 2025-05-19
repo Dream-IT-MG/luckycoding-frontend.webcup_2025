@@ -15,6 +15,7 @@ export type PageSection = {
     type: string;
     props: unknown;
   } | null;
+  dessin: string;
 };
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
         text: "",
       },
       media: null,
+      dessin: "",
     },
   ]);
 

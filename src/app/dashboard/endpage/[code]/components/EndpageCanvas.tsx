@@ -9,8 +9,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { emojiForEmotions } from "@/utils/emotions";
-import { ImageIcon, Pencil } from "lucide-react";
-import React from "react";
+import { Brush, ImageIcon, Import, Palette, Pencil } from "lucide-react";
+import React, { useRef } from "react";
 import { Layers } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PageSection } from "../page";
+import {
+  Dialog,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+  DialogHeader,
+  DialogContent,
+} from "@/components/ui/dialog";
+import Link from "next/link";
 
 export default function EndpageCanvas({
   pageSections,
@@ -36,6 +45,8 @@ export default function EndpageCanvas({
   setPageSections: React.Dispatch<React.SetStateAction<PageSection[]>>;
 }) {
   const currentEmotion = () => pageSections[currentSection].emotion;
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const changeCurrentSectionEmotion = (emotion: string) => {
     setPageSections((prev) =>
@@ -67,6 +78,7 @@ export default function EndpageCanvas({
           text: "",
         },
         media: null,
+        dessin: "",
       },
     ]);
     setCurrentSection(pageSections.length);
@@ -96,6 +108,49 @@ export default function EndpageCanvas({
           : section
       )
     );
+  };
+
+  const uploadImage = async (file: File) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (res.ok) {
+      setPageSections((prev) =>
+        prev.map((section, idx) =>
+          idx === currentSection
+            ? {
+                ...section,
+                media: {
+                  type: "image",
+                  props: `/uploads/${file.name}`,
+                },
+              }
+            : section
+        )
+      );
+      console.log("Upload successful!");
+    } else {
+      console.log("Upload failed.");
+    }
+  };
+
+  const [isDrawingDialogOpen, setIsDrawingDialogOpen] = useState(false);
+
+  const handleChange = () => {
+    setIsDrawingDialogOpen(false);
+
+    const files = inputRef.current?.files;
+    if (files && files.length > 0) {
+      console.log("Selected file:", files[0]);
+      uploadImage(files[0]);
+    }
   };
 
   return (
@@ -138,7 +193,7 @@ export default function EndpageCanvas({
             </SheetHeader>
           </SheetContent>
         </Sheet>
-        <div className="mt-10 w-full justify-center flex">
+        <div className="mt-10 w-11/12 justify-center flex gap-5">
           <Sheet>
             <SheetTrigger asChild>
               <div className="relative h-56 lg:h-[60vh] w-11/12 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300">
@@ -245,6 +300,55 @@ export default function EndpageCanvas({
                       </SheetHeader>
                     </SheetContent>
                   </Sheet>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Dialog
+                    open={isDrawingDialogOpen}
+                    onOpenChange={setIsDrawingDialogOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <div className="hover:bg-gray-400 hover:cursor-pointer bg-gray-300 h-28 w-full rounded-[--radius] text-xl flex justify-center items-center text-slate-700">
+                        Drawing
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-fit">
+                      <DialogHeader>
+                        <DialogTitle className="text-center">
+                          Create or import your drawing 🎨
+                        </DialogTitle>
+                        <DialogDescription className="hidden" />
+                        <div className="flex justify-center items-center gap-10 pt-5">
+                          <Link
+                            href="/dessin"
+                            target="_blank"
+                            className="relative size-56 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300"
+                          >
+                            <Palette className="size-12 z-10" />
+                            <div className="text-xs mt-2 z-10">
+                              Click to create a new drawing
+                            </div>
+                          </Link>
+                          <div className="text-slate-700">or</div>
+                          <div
+                            className="relative size-56 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300"
+                            onClick={() => inputRef.current?.click()}
+                          >
+                            <input
+                              type="file"
+                              ref={inputRef}
+                              onChange={handleChange}
+                              className="hidden"
+                            />
+
+                            <Import className="size-12 z-10" />
+                            <div className="text-xs mt-2 z-10">
+                              Click to import an existing drawing
+                            </div>
+                          </div>
+                        </div>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </SheetHeader>
             </SheetContent>
