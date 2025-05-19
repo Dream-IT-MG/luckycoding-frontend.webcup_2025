@@ -20,6 +20,8 @@ import { z } from "zod";
 import SectionManagement from "./SectionManagement";
 import ImageMediaInput from "./ImageMediaInput";
 import VideoMediaInput from "./VideoMediaInput";
+import {Dialog,DialogContent,DialogTitle} from "@/components/ui/dialog"
+import Link from "next/link";
 
 export type PageSection = {
   emotion: string;
@@ -28,6 +30,10 @@ export type PageSection = {
     text: string;
   };
   media: {
+    type: string;
+    props: unknown;
+  } | null;
+  dessin: {
     type: string;
     props: unknown;
   } | null;
@@ -42,8 +48,11 @@ export default function EndpageCanvas() {
         text: "",
       },
       media: null,
+      dessin: null,
     },
   ]);
+
+  const [open, setOpen] = useState(false);
 
   const currentEmotion = () => pageSections[currentSection].emotion;
 
@@ -77,6 +86,7 @@ export default function EndpageCanvas() {
           text: "",
         },
         media: null,
+        dessin: null,
       },
     ]);
     setCurrentSection(pageSections.length);
@@ -108,10 +118,40 @@ export default function EndpageCanvas() {
     );
   };
 
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleUpload = async () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (res.ok) {
+      console.log('Upload successful!');
+    } else {
+      console.log('Upload failed.');
+    }
+  };
+
   return (
     <>
       <div className="rounded-[--radius] h-screen w-full flex flex-col justify-center items-center">
         <pre>{JSON.stringify(pageSections)}</pre>
+        <Dialog open={open} onOpenChange={setOpen}>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogTitle></DialogTitle>
+                <img
+                  alt="dfdf"
+                  src="/gif/claquerporte.gif"
+                  className="w-full h-auto"
+                />
+              </DialogContent>
+            </Dialog>
         <Sheet>
           <SheetTrigger asChild>
             <div className="flex justify-center items-center">
@@ -162,12 +202,19 @@ export default function EndpageCanvas() {
             <div>
 
             </div>
-              <SheetTrigger asChild>
+            <div className="absolute right-20">
+              <Link href="/dessin">
+              <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded">
+                Create a Drawing
+              </button>
+            </Link>
+            </div>
+              {/* <SheetTrigger asChild> */}
               <div className="relative h-40 ml-0 lg:ml-[40rem] lg:h-[30vh] w-1/3 bg-gray-200 rounded-[--radius] flex flex-col justify-center items-center hover:bg-gray-300 text-slate-700 overflow-hidden group transition-all duration-300">
-                {pageSections[currentSection].media?.type === "image" ? (
+                {pageSections[currentSection].dessin?.type === "image" ? (
                   <>
                     <img
-                      src={pageSections[currentSection].media?.props as string}
+                      src={pageSections[currentSection].dessin?.props as string}
                       alt="Image preview"
                       className="absolute inset-0 object-cover w-full h-full scale-100 group-hover:scale-105 transition-transform duration-300"
                     />
@@ -175,15 +222,16 @@ export default function EndpageCanvas() {
                     <Pencil className="absolute top-2 right-2 text-white opacity-90 group-hover:opacity-100" />
                   </>
                 ) : (
-                  <>
+                  <div className="cursor-pointer" onClick={handleUpload}>
+                    <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
                     <Pencil className="size-12 z-10" />
                     <div className="text-xs mt-2 z-10">
-                      Click to add Drawing
+                      Click to import your Drawing
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
-            </SheetTrigger>
+            {/* </SheetTrigger> */}
             <div className="w-1/3"></div>
 
             <SheetContent className="overflow-y-scroll" side={"left"}>

@@ -1,6 +1,5 @@
 import Navbar from "./components/Navbar";
 import EndpageCanvas from "./components/EndpageCanvas";
-import { BackgroundBeams } from "./../../../../components/ui/background-beams";
 
 export default async function App({
   params,
@@ -17,11 +16,7 @@ export default async function App({
         backgroundImage:
           "linear-gradient(to right top, #1a345c, #252d51, #292746, #2a223b, #291d31)",
       }}>
-        {/* Background beams en fond */}
-              <div className="absolute inset-0 z-0 pointer-events-none">
-                <BackgroundBeams />
-              </div>
-        <div className="relative flex justify-center items-center w-[70vw] min-h-[90vh] bg-white shadow-md rounded-lg">
+        <div className="relative flex justify-center items-center w-[70vw] min-h-[90vh] bg-white/10 shadow-lg rounded-lg">
           <Navbar />
 
           <EndpageCanvas />

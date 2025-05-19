@@ -15,9 +15,11 @@ export default function Dessin() {
   }, []);
 
   return (
-    <div>
-      <h2>Dessin</h2>
-      <brush-ninja-drawing></brush-ninja-drawing>
-    </div>
+    <main className='w-full h-[100vh]'>
+      <brush-ninja-drawing className='h-[100vh]'></brush-ninja-drawing>
+      <div className='h-[100%] flex justify-center align-center m-10 bg-dark'>
+        <h2>Creéez votre dessin juste au dessus puis importez-le dans notre éditeur !</h2>
+      </div>
+    </main>
   );
 }
